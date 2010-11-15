@@ -6,46 +6,47 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-public class Semaphore extends Canvas {
-	int width = 12;
-	int height = 30;
-	int x, y;
-	Color red, yellow, green, light_red, light_yellow, light_green;
-	int signal = 0; /* 0: closed; 1: alert; 2: open */
+public class Semaphore {
 	
-	public void paint(Graphics g){ 
-		Graphics2D g2D=(Graphics2D) g;
-		g2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				RenderingHints.VALUE_ANTIALIAS_ON);
+	private int x;
+	private int y;
+	
+	private static final int width = 12;
+	private static final int height = 30;
+	
+	private Color red, yellow, green, light_red, light_yellow, light_green;
+	private int signal = 0; /* 0: closed; 1: alert; 2: open */
+	
+	public void draw(Graphics2D g2D){ 
+		
 		g2D.setColor(Color.BLACK);
-		g2D.translate(x, y);
-		g2D.fillRect(0, 0, width, height);
+		g2D.fillRect(x, y, width, height);
 		
 		
 		switch (signal) {
 		case 0:
 			g2D.setColor(light_red);
-			g2D.fillOval(3, 2, 6, 6);
+			g2D.fillOval(x + 3, y + 2, 6, 6);
 			g2D.setColor(yellow);
-			g2D.fillOval(3, 12, 6, 6);
+			g2D.fillOval(x + 3, y + 12, 6, 6);
 			g2D.setColor(green);
-			g2D.fillOval(3, 22, 6, 6);
+			g2D.fillOval(x + 3, y + 22, 6, 6);
 			break;
 		case 1:
 			g2D.setColor(red);
-			g2D.fillOval(3, 2, 6, 6);
+			g2D.fillOval(x + 3, y + 2, 6, 6);
 			g2D.setColor(light_yellow);
-			g2D.fillOval(3, 12, 6, 6);
+			g2D.fillOval(x + 3, y + 12, 6, 6);
 			g2D.setColor(green);
-			g2D.fillOval(3, 22, 6, 6);
+			g2D.fillOval(x + 3, y + 22, 6, 6);
 			break;
 		case 2:
 			g2D.setColor(red);
-			g2D.fillOval(3, 2, 6, 6);
+			g2D.fillOval(x + 3, y + 2, 6, 6);
 			g2D.setColor(yellow);
-			g2D.fillOval(3, 12, 6, 6);
+			g2D.fillOval(x + 3, y + 12, 6, 6);
 			g2D.setColor(light_green);
-			g2D.fillOval(3, 22, 6, 6);
+			g2D.fillOval(x + 3, y + 22, 6, 6);
 			break;
 		}
 	}
@@ -66,20 +67,10 @@ public class Semaphore extends Canvas {
 	}
 	
 	public void close(){
-		signal = 1;
-		repaint(x, y, width, height);
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		signal = 0;
-		repaint(x, y, width, height);
 	}
 	
 	public void open(){
 		signal = 2;
-		repaint (x, y, width, height);
 	}
 }
