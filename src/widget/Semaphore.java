@@ -1,12 +1,9 @@
 package widget;
 
-import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 
-public class Semaphore {
+public class Semaphore implements Widget {
 	
 	private int x;
 	private int y;

@@ -9,11 +9,16 @@ public class Main {
 		// TODO Auto-generated method stub
 		Map mapa = new Map();
 		
-		System.out.println(mapa.addSemaphore(10, 50));
-		System.out.println(mapa.addSemaphore(50, 50));
-		System.out.println(mapa.addSemaphore(100, 50));
-		System.out.println(mapa.addSemaphore(150, 50));
-		System.out.println(mapa.addSemaphore(200, 50));
+	
+		
+		System.out.println("id: " + mapa.addSemaphore(10, 50));
+		System.out.println("id: " + mapa.addSemaphore(50, 50));
+		System.out.println("id: " + mapa.addSemaphore(100, 50));
+		System.out.println("id: " + mapa.addSemaphore(150, 50));
+		System.out.println("id: " + mapa.addSemaphore(10, 100));
+		
+		mapa.addStreet(300, 300, 150, 150);
+		mapa.addStreet(200, 50, 200, 150);
 		
 		int count = 0;
 		while (true){
