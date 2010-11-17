@@ -70,7 +70,7 @@ public class Parser {
 						startAmount--;
 						startPos[startAmount] = new Point(i, j);
 					} else {
-						/* Sem�foros */
+						/* Semáforos */
 						if (((int)(curr) - (int)'A') >= 0 && ((int)(curr) - (int)'A') <= ((int)'Z' - (int)'A')) {
 							System.out.println("Traffic light at " + i + ", " + j);
 							System.out.println("Key " + curr);
