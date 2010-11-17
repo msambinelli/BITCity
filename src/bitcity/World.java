@@ -1,6 +1,5 @@
 package bitcity;
 
-import java.awt.Component;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,8 +14,9 @@ public class World {
 	
 	final public static int ROAD = 1;
 	final public static int CAR = 4;
-	final public static int CAR_RUNING = 5;
-	final public static int CAR_STOPED = 6;
+	final public static int CAR_RUNNING = 5;
+	final public static int CAR_STOPPED = 6;
+	final public static int CAR_HONKING = 8;
 	
 	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
 			int road[][], ArrayList<TrafficLight> t) {

@@ -112,8 +112,7 @@ public class WorldMap extends JPanel implements Runnable {
 							(int)((j - 1) * stepw), (int)((i - 1) * steph) + (steph / 2));
 					
 					continue;
-				} else if (this.world.getRoadElement(i, j) == World.CAR_RUNING || 
-						this.world.getRoadElement(i, j) == World.CAR_STOPED) {
+				} else if ((this.world.getRoadElement(i, j) & World.CAR) != 0) { 
 					/* This is a car. */
 					ctx.setColor(Color.BLUE);
 				} else if (this.world.isRoad(i, j)) {
@@ -125,6 +124,11 @@ public class WorldMap extends JPanel implements Runnable {
 				
 				ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 						(int)stepw, (int)steph);
+				if ((this.world.getRoadElement(i, j) & World.CAR_HONKING) != 0) {
+					ctx.setColor(Color.WHITE);
+					ctx.fillRect((int)(((j - 1) * stepw) + 1), (int)(((i - 1) * steph) + (steph/4.)), 
+							(int)(stepw - 2), (int)((steph - 1)/2.));
+				}
 			}
 		}
 	}

@@ -19,7 +19,7 @@ import bitcity.Semaphore.SEM_STATUS;
 public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
 	private World world;
-	private int state = World.CAR_RUNING;
+	private int state = World.CAR_RUNNING;
 	
 	public Car(World world, Point startPos, char direction) {
 		super(startPos, direction);
@@ -67,33 +67,35 @@ public class Car extends MovingObject {
 		if (this.world.getSemaphores().containsKey(ahead)) {
 			
 			if (this.world.getSemaphores().get(ahead).status(pAhead) != SEM_STATUS.CLOSED){
-				if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
+				if ((this.world.getRoadElement(pAhead.x, pAhead.y) & World.CAR_STOPPED) != World.CAR_STOPPED){
 					this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
-					this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
+					this.pos = this.getNextPos(this.direction, this.pos);
+					this.state = World.CAR_RUNNING;
 				} else {
-					this.state = World.CAR_STOPED;
-					this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
+					this.state = World.CAR_STOPPED | World.CAR_HONKING;
+					this.world.setRoadElement(this.pos.x, this.pos.y, this.state);
 					this.bell();
 				}
 			} else {
-				this.state = World.CAR_STOPED;
-				this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
+				this.state = World.CAR_STOPPED;
+				this.world.setRoadElement(this.pos.x, this.pos.y, this.state);
 				//System.out.println(this.world.getRoadElement(this.pos.x, this.pos.y));
 			}
 			
 		} else {
 			//System.out.println("ahead " + ahead );
-			if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
+			if ((this.world.getRoadElement(pAhead.x, pAhead.y) & World.CAR_STOPPED) != World.CAR_STOPPED){
 				this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 				this.pos = this.getNextPos(this.direction, this.pos);
+				this.state = World.CAR_RUNNING;
 				if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
-					/* Chance de mudar de direÔøΩÔøΩo. */
+					/* Chance de mudar de direção. */
 					nextPos = this.getNextPos(ahead, this.pos);
 					if (this.world.getElementAt(nextPos) == ahead) {
-						/* Com certeza precisa mudar de direÔøΩÔøΩo. */
+						/* Com certeza precisa mudar de direção. */
 						this.direction = ahead;
 					} else {
-						/* Tem chance de trocar de direÔøΩÔøΩo. */
+						/* Tem chance de trocar de direção. */
 						prob = Math.random();
 						if (prob < changeDirectionProb) {
 							this.direction = ahead;
@@ -102,7 +104,7 @@ public class Car extends MovingObject {
 				}
 			} else {
 				//System.out.println("proximo esta parado");
-				this.state = World.CAR_STOPED;
+				this.state = World.CAR_STOPPED;
 			}
 			
 			
@@ -131,52 +133,51 @@ public class Car extends MovingObject {
 	}
 	
 	public void bell(){
-
 		File soundFile = new File("data/beepbeep.wav");
- 
-        AudioInputStream audioInputStream = null;
-        try { 
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e1) { 
-            e1.printStackTrace();
-            return;
-        } catch (IOException e1) { 
-        	e1.printStackTrace();
-            return;
-        } 
- 
-        AudioFormat format = audioInputStream.getFormat();
-        SourceDataLine auline = null;
-        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
- 
-        try { 
-            auline = (SourceDataLine) AudioSystem.getLine(info);
-            auline.open(format);
-        } catch (LineUnavailableException e) { 
-            e.printStackTrace();
-            return;
-        } catch (Exception e) { 
-            e.printStackTrace();
-            return;
-        } 
- 
-        auline.start();
-        int nBytesRead = 0;
-        byte[] abData = new byte[524288]; // 128Kb 
- 
-        try { 
-            while (nBytesRead != -1) { 
-                nBytesRead = audioInputStream.read(abData, 0, abData.length);
-                if (nBytesRead >= 0) 
-                    auline.write(abData, 0, nBytesRead);
-            } 
-        } catch (IOException e) { 
-            e.printStackTrace();
-            return;
-        } finally { 
-            auline.drain();
-            auline.close();
-        }
+
+		AudioInputStream audioInputStream = null;
+		try { 
+			audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+		} catch (UnsupportedAudioFileException e1) { 
+			e1.printStackTrace();
+			return;
+		} catch (IOException e1) { 
+			e1.printStackTrace();
+			return;
+		} 
+
+		AudioFormat format = audioInputStream.getFormat();
+		SourceDataLine auline = null;
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+
+		try { 
+			auline = (SourceDataLine) AudioSystem.getLine(info);
+			auline.open(format);
+		} catch (LineUnavailableException e) { 
+			e.printStackTrace();
+			return;
+		} catch (Exception e) { 
+			e.printStackTrace();
+			return;
+		} 
+
+		auline.start();
+		int nBytesRead = 0;
+		byte[] abData = new byte[524288]; // 128Kb 
+
+		try { 
+			while (nBytesRead != -1) { 
+				nBytesRead = audioInputStream.read(abData, 0, abData.length);
+				if (nBytesRead >= 0) 
+					auline.write(abData, 0, nBytesRead);
+			} 
+		} catch (IOException e) { 
+			e.printStackTrace();
+			return;
+		} finally { 
+			auline.drain();
+			auline.close();
+		}
 	}
 }
 
