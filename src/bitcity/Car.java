@@ -53,7 +53,7 @@ public class Car extends MovingObject {
 		double prob;
 		char ahead = this.world.getElementAhead(this.direction, this.pos);
 		
-		this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
+		
 		if (ahead == Parser.SENTINEL || ahead == Parser.GARAGE) {
 			/* '&' simboliza estacionamento agora. */
 			throw new Exception("Destroy car");
@@ -65,11 +65,12 @@ public class Car extends MovingObject {
 			
 			if (this.world.getSemaphores().get(ahead).isopen(pAhead)){
 				if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
+					this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 					this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
 				} else {
 					this.state = World.CAR_STOPED;
 					this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
-					this.bell();
+					//this.bell();
 				}
 			} else {
 				this.state = World.CAR_STOPED;
@@ -80,6 +81,7 @@ public class Car extends MovingObject {
 		} else {
 			System.out.println("ahead " + ahead );
 			if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
+				this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 				this.pos = this.getNextPos(this.direction, this.pos);
 				if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
 					/* Chance de mudar de dire��o. */
