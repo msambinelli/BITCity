@@ -131,58 +131,52 @@ public class Car extends MovingObject {
 	}
 	
 	public void bell(){
-		return;
-		/*
-		new Thread(new Runnable () {
-			
-			public void run(){
-		        File soundFile = new File("data/beepbeep.wav");
-		 
-		        AudioInputStream audioInputStream = null;
-		        try { 
-		            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-		        } catch (UnsupportedAudioFileException e1) { 
-		            e1.printStackTrace();
-		            return;
-		        } catch (IOException e1) { 
-		            e1.printStackTrace();
-		            return;
-		        } 
-		 
-		        AudioFormat format = audioInputStream.getFormat();
-		        SourceDataLine auline = null;
-		        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-		 
-		        try { 
-		            auline = (SourceDataLine) AudioSystem.getLine(info);
-		            auline.open(format);
-		        } catch (LineUnavailableException e) { 
-		            e.printStackTrace();
-		            return;
-		        } catch (Exception e) { 
-		            e.printStackTrace();
-		            return;
-		        } 
-		 
-		        auline.start();
-		        int nBytesRead = 0;
-		        byte[] abData = new byte[524288]; // 128Kb 
-		 
-		        try { 
-		            while (nBytesRead != -1) { 
-		                nBytesRead = audioInputStream.read(abData, 0, abData.length);
-		                if (nBytesRead >= 0) 
-		                    auline.write(abData, 0, nBytesRead);
-		            } 
-		        } catch (IOException e) { 
-		            e.printStackTrace();
-		            return;
-		        } finally { 
-		            auline.drain();
-		            auline.close();
-		        }
-			}
-		}).start();*/
+
+		File soundFile = new File("data/beepbeep.wav");
+ 
+        AudioInputStream audioInputStream = null;
+        try { 
+            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (UnsupportedAudioFileException e1) { 
+            e1.printStackTrace();
+            return;
+        } catch (IOException e1) { 
+        	e1.printStackTrace();
+            return;
+        } 
+ 
+        AudioFormat format = audioInputStream.getFormat();
+        SourceDataLine auline = null;
+        DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
+ 
+        try { 
+            auline = (SourceDataLine) AudioSystem.getLine(info);
+            auline.open(format);
+        } catch (LineUnavailableException e) { 
+            e.printStackTrace();
+            return;
+        } catch (Exception e) { 
+            e.printStackTrace();
+            return;
+        } 
+ 
+        auline.start();
+        int nBytesRead = 0;
+        byte[] abData = new byte[524288]; // 128Kb 
+ 
+        try { 
+            while (nBytesRead != -1) { 
+                nBytesRead = audioInputStream.read(abData, 0, abData.length);
+                if (nBytesRead >= 0) 
+                    auline.write(abData, 0, nBytesRead);
+            } 
+        } catch (IOException e) { 
+            e.printStackTrace();
+            return;
+        } finally { 
+            auline.drain();
+            auline.close();
+        }
 	}
 }
 

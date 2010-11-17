@@ -15,6 +15,19 @@ public class Semaphore {
 		this.status = SEM_STATUS.OPEN;
 	}
 	
+	/* Ilustração do primeiro problema de não se usar syncronized neste local
+	 * 
+	 * + A thread T1 invoca open(P1), onde P1 é o seu ponto de localização
+	 * + O ponto P1 ficou verde
+	 * + 1 milésimo de segundo depois a thread T2 invoca open(P2)
+	 * + O ponto P2 ficou verde e P1 vermelho, mas não se passou ainda os 5s que T1 dinha direito 
+	 * de ficar aberto
+	 * 
+	 * Ilustração do segundo problema
+	 * 
+	 * 
+	 * 
+	 */
 	public synchronized void open(Point p){
 		this.position = p;
 		this.status = SEM_STATUS.OPEN;
