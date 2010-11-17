@@ -24,6 +24,7 @@ public class Car extends MovingObject {
 	public Car(World world, Point startPos, char direction) {
 		super(startPos, direction);
 		this.world = world;
+		WorldMap.carCount++;
 	}
 	
 	public static Car createCar(World world, Point startPos) throws Exception {
@@ -55,9 +56,9 @@ public class Car extends MovingObject {
 		double prob;
 		char ahead = this.world.getElementAhead(this.direction, this.pos);
 		
-		
 		if (ahead == Parser.SENTINEL || ahead == Parser.GARAGE) {
 			/* '&' simboliza estacionamento agora. */
+			this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 			throw new Exception("Destroy car");
 		}
 		
@@ -77,11 +78,11 @@ public class Car extends MovingObject {
 			} else {
 				this.state = World.CAR_STOPED;
 				this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
-				System.out.println(this.world.getRoadElement(this.pos.x, this.pos.y));
+				//System.out.println(this.world.getRoadElement(this.pos.x, this.pos.y));
 			}
 			
 		} else {
-			System.out.println("ahead " + ahead );
+			//System.out.println("ahead " + ahead );
 			if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
 				this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 				this.pos = this.getNextPos(this.direction, this.pos);
@@ -100,9 +101,8 @@ public class Car extends MovingObject {
 					}
 				}
 			} else {
-				System.out.println("proximo esta parado");
+				//System.out.println("proximo esta parado");
 				this.state = World.CAR_STOPED;
-				//this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
 			}
 			
 			
@@ -127,11 +127,12 @@ public class Car extends MovingObject {
 			}
 			//System.out.println(this.pos);
 		}
-		
+		WorldMap.carCount--;
 	}
 	
 	public void bell(){
-			 
+		return;
+		/*
 		new Thread(new Runnable () {
 			
 			public void run(){
@@ -181,7 +182,7 @@ public class Car extends MovingObject {
 		            auline.close();
 		        }
 			}
-		}).start();
+		}).start();*/
 	}
 }
 
