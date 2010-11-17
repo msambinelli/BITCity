@@ -6,13 +6,43 @@ import java.awt.Point;
 public class TrafficLight extends WorldObject {
 
 	private Point position;
+	private Semaphore controler;
 	
-	public TrafficLight(Point position) {
-		this.position = position;
+	public TrafficLight(int i, int j, Semaphore semaphore) {
+		this.position = new Point(i, j);
+		this.controler = semaphore;
 	}
 	
+	public void run(){
+		while (true){
+			this.controler.open(this.position);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+
 	/* XXX Not used */
 	public void draw(Graphics2D ctx) {
 		
+	}
+
+	public Point getPosition() {
+		return position;
+	}
+
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	public Semaphore getControler() {
+		return controler;
+	}
+
+	public void setControler(Semaphore controler) {
+		this.controler = controler;
 	}
 }

@@ -1,23 +1,28 @@
 package bitcity;
 
+import java.awt.Component;
 import java.awt.Point;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class World {
 	private char world[][];
 	private Point startPos[];
-	private Set<Character> semaphores;
+	private HashMap<Character, Semaphore> semaphores;
 	private int road[][];
+	private ArrayList<TrafficLight> trafficLight;
 	
 	final public static int ROAD = 1;
 	final public static int CAR = 2;
 	
-	public World(char world[][], Point startPos[], Set<Character> semaphores, int road[][]) {
+	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
+			int road[][], ArrayList<TrafficLight> t) {
 		this.world = world;
 		this.startPos = startPos;
-		this.semaphores = semaphores;
+		this.semaphores = semaphores2;
 		this.road = road;
+		this.trafficLight = t;
 	}
 	
 	public void setMapElement(int row, int col, char value) {
@@ -55,7 +60,7 @@ public class World {
 		return this.world[x][y];
 	}
 	
-	public Set<Character> getSemaphores() {
+	public HashMap<Character, Semaphore> getSemaphores() {
 		return this.semaphores;
 	}
 	
@@ -82,5 +87,19 @@ public class World {
 	public int getRoadElement(int row, int col) {
 		return this.road[row][col];
 	}
-	
+
+	public int getTrafficLightId(int i, int j) {
+		Point p = new Point(i, j);
+		for (int k = 0; k < this.trafficLight.size(); k++){
+			if (this.trafficLight.get(k).getPosition().equals(p)){
+				return k;
+			}
+		}
+		return -1;
+	}
+
+	public  ArrayList<TrafficLight> getTrafficLight() {
+		
+		return this.trafficLight;
+	}
 }

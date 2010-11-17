@@ -48,22 +48,22 @@ public class Car extends MovingObject {
 			throw new Exception("Destroy car");
 		}
 		
-		if (this.world.getSemaphores().contains(ahead)) {
-			/* É um semáforo. */
+		if (this.world.getSemaphores().containsKey(ahead)) {
+			/* ÔøΩ um semÔøΩforo. */
 			/* XXX */
-			//System.out.println("Semáforo: " + this.pos);
+			//System.out.println("SemÔøΩforo: " + this.pos);
 			this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
 		} else {
 			this.pos = this.getNextPos(this.direction, this.pos);
 
 			if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
-				/* Chance de mudar de direção. */
+				/* Chance de mudar de direÔøΩÔøΩo. */
 				nextPos = this.getNextPos(ahead, this.pos);
 				if (this.world.getElementAt(nextPos) == ahead) {
-					/* Com certeza precisa mudar de direção. */
+					/* Com certeza precisa mudar de direÔøΩÔøΩo. */
 					this.direction = ahead;
 				} else {
-					/* Tem chance de trocar de direção. */
+					/* Tem chance de trocar de direÔøΩÔøΩo. */
 					prob = Math.random();
 					if (prob < changeDirectionProb) {
 						this.direction = ahead;

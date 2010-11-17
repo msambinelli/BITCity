@@ -1,14 +1,19 @@
 package bitcity;
 
 import java.awt.Point;
+import java.awt.peer.LightweightPeer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 
 public class Parser {
 	private FileReader fileIn;
 	private Scanner input;
+	
+	
 	public static final char SENTINEL = '!';
 	public static final char SIDEWALK = '#';
 	public static final char GARAGE = '&';
@@ -20,12 +25,13 @@ public class Parser {
 	
 	public World parse() throws Exception {
 		String line;
-		HashSet<Character> semaphores = new HashSet<Character>();
+		HashMap<Character, Semaphore> semaphores = new HashMap<Character, Semaphore>();
 		char worldMap[][], curr;
 		int roadMap[][];
 		Point startPos[];
 		int rows, cols, startAmount, toSync;
 		int i, j;
+		ArrayList<TrafficLight> trafficLight = new ArrayList<TrafficLight>();
 		
 		try {
 			rows = input.nextInt();
@@ -64,16 +70,28 @@ public class Parser {
 						startAmount--;
 						startPos[startAmount] = new Point(i, j);
 					} else {
-						/* Sem‡foros */
+						/* Semï¿½foros */
 						if (((int)(curr) - (int)'A') >= 0 && ((int)(curr) - (int)'A') <= ((int)'Z' - (int)'A')) {
 							System.out.println("Traffic light at " + i + ", " + j);
-							semaphores.add(curr);
+							System.out.println("Key " + curr);
+							if (!semaphores.containsKey(curr)){
+								semaphores.put(curr, new Semaphore());
+							}
+					
+							trafficLight.add(new TrafficLight(i, j, semaphores.get(curr)));
+					
 						}
 					}
 					worldMap[i][j] = curr;
 					roadMap[i][j] = 0;
 				}
 			}
+			/*
+			for (int z = 0; z < trafficLight.size(); z++){
+				System.out.println("xxx " + z + " " + trafficLight.get(z).getPosition());
+			}
+			*/
+			//System.exit(1);
 		} finally {
 			fileIn.close();
 		}
@@ -81,7 +99,7 @@ public class Parser {
 		/* Construct the road map now. */
 		buildRoadMap(worldMap, roadMap, startPos[0].x, startPos[0].y);
 		
-		return new World(worldMap, startPos, semaphores, roadMap);
+		return new World(worldMap, startPos, semaphores, roadMap, trafficLight);
 	}
 	
 	

@@ -23,6 +23,11 @@ public class WorldMap extends JPanel implements Runnable {
 	}
 	
 	public void run() {
+		
+		for (int i = 0; i < this.world.getTrafficLight().size(); i++){
+			this.world.getTrafficLight().get(i).start();
+		}
+		
 		while (true) {
 			try {
 				Thread.sleep((int)(1000/30.));
@@ -67,19 +72,26 @@ public class WorldMap extends JPanel implements Runnable {
 				} else if (elem == '$') {
 					/* Some kind of decoration. */
 					ctx.setColor(new Color(0, (float)0.5, 0));
-				} else if (this.world.getSemaphores().contains(elem)) {
+				} else if (this.world.getSemaphores().containsKey(elem)) {
 					/* Traffic light. */
 					ctx.setColor(Color.BLACK);
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 							(int)stepw, (int)steph);
 					
-					ctx.setColor(Color.YELLOW);
+					if (this.world.getSemaphores().get(elem).isopen(i, j)){
+						ctx.setColor(Color.GREEN);
+					} else {
+						ctx.setColor(Color.RED);
+					}
+					//ctx.setColor(Color.YELLOW);
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 							(int)stepw, (int)stepw);
 					
-					ctx.setColor(Color.DARK_GRAY);
+					ctx.setColor(Color.gray);
+					
 					ctx.drawString("" + this.world.getElementAt(i, j) + "",
 							(int)((j - 1) * stepw), (int)((i - 1) * steph) + (steph / 2));
+					
 					continue;
 				} else if (this.world.getRoadElement(i, j) == World.CAR) {
 					/* This is a car. */
