@@ -1,7 +1,7 @@
 package bitcity;
 
 import javax.swing.JPanel;
-
+import java.awt.Point;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,6 +13,9 @@ public class WorldMap extends JPanel implements Runnable {
 	 */
 	private static final long serialVersionUID = 2398485906470095960L;
 
+	public static int carCount = 0;
+	private static final int carLimit = 70;
+	
 	private World world;
 	private Thread thread;
 	
@@ -23,6 +26,7 @@ public class WorldMap extends JPanel implements Runnable {
 	}
 	
 	public void run() {
+		Point startPos;
 		
 		for (int i = 0; i < this.world.getTrafficLight().size(); i++){
 			this.world.getTrafficLight().get(i).start();
@@ -31,10 +35,18 @@ public class WorldMap extends JPanel implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep((int)(1000/30.));
-				if (Math.random() < 0.15) {
+				if (WorldMap.carCount < WorldMap.carLimit && Math.random() < 0.15) {
 					/* Add a new car. */
-					System.out.println(">> Add car");
-					Car.createCar(this.world, this.world.getRandomStartPos()).start();
+					for (int i = 0; i < 2; i++) {
+						startPos = this.world.getRandomStartPos();
+						if ((this.world.getRoadElement(startPos.x, startPos.y) & World.CAR) != 0) {
+							System.out.println(">> There is a car in the soup");
+						} else {
+							System.out.println(">> Add car");
+							Car.createCar(this.world, startPos).start();
+							break;
+						}
+					}
 				}
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
