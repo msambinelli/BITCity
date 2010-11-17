@@ -17,7 +17,7 @@ public class TrafficLight extends WorldObject {
 		while (true){
 			this.controler.open(this.position);
 			try {
-				Thread.sleep(7000);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
