@@ -14,7 +14,8 @@ public class World {
 	private ArrayList<TrafficLight> trafficLight;
 	
 	final public static int ROAD = 1;
-	final public static int CAR = 2;
+	final public static int CAR_RUNING = 2;
+	public static final int CAR_STOPED = 3;
 	
 	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
 			int road[][], ArrayList<TrafficLight> t) {

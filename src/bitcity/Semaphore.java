@@ -25,4 +25,8 @@ public class Semaphore {
 		Point p = new Point(i, j);
 		return this.position.equals(p);
 	}
+	
+	public boolean isopen(Point p){
+		return this.position.equals(p);
+	}
 }

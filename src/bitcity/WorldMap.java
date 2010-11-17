@@ -93,7 +93,8 @@ public class WorldMap extends JPanel implements Runnable {
 							(int)((j - 1) * stepw), (int)((i - 1) * steph) + (steph / 2));
 					
 					continue;
-				} else if (this.world.getRoadElement(i, j) == World.CAR) {
+				} else if (this.world.getRoadElement(i, j) == World.CAR_RUNING || 
+						this.world.getRoadElement(i, j) == World.CAR_STOPED) {
 					/* This is a car. */
 					ctx.setColor(Color.BLUE);
 				} else if (this.world.isRoad(i, j)) {

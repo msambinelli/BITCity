@@ -7,6 +7,7 @@ import java.awt.Color;
 public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
 	private World world;
+	private int state = World.CAR_RUNING;
 	
 	public Car(World world, Point startPos, char direction) {
 		super(startPos, direction);
@@ -37,7 +38,7 @@ public class Car extends MovingObject {
 		return new Car(world, startPos, direction);
 	}
 	
-	public void move() throws Exception {
+	public synchronized void move() throws Exception {
 		Point nextPos;
 		double prob;
 		char ahead = this.world.getElementAhead(this.direction, this.pos);
@@ -48,30 +49,45 @@ public class Car extends MovingObject {
 			throw new Exception("Destroy car");
 		}
 		
+		Point pAhead = this.getNextPos(this.direction, this.pos);
+		
 		if (this.world.getSemaphores().containsKey(ahead)) {
-			/* � um sem�foro. */
-			/* XXX */
-			//System.out.println("Sem�foro: " + this.pos);
-			this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
+			
+			if (this.world.getSemaphores().get(ahead).isopen(pAhead)){
+				this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
+			} else {
+				this.state = World.CAR_STOPED;
+				this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
+				System.out.println(this.world.getRoadElement(this.pos.x, this.pos.y));
+			}
+			
 		} else {
-			this.pos = this.getNextPos(this.direction, this.pos);
-
-			if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
-				/* Chance de mudar de dire��o. */
-				nextPos = this.getNextPos(ahead, this.pos);
-				if (this.world.getElementAt(nextPos) == ahead) {
-					/* Com certeza precisa mudar de dire��o. */
-					this.direction = ahead;
-				} else {
-					/* Tem chance de trocar de dire��o. */
-					prob = Math.random();
-					if (prob < changeDirectionProb) {
+			System.out.println("ahead " + ahead );
+			if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
+				this.pos = this.getNextPos(this.direction, this.pos);
+				if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
+					/* Chance de mudar de dire��o. */
+					nextPos = this.getNextPos(ahead, this.pos);
+					if (this.world.getElementAt(nextPos) == ahead) {
+						/* Com certeza precisa mudar de dire��o. */
 						this.direction = ahead;
+					} else {
+						/* Tem chance de trocar de dire��o. */
+						prob = Math.random();
+						if (prob < changeDirectionProb) {
+							this.direction = ahead;
+						}
 					}
 				}
+			} else {
+				System.out.println("proximo esta parado");
+				this.state = World.CAR_STOPED;
+				//this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
 			}
+			
+			
 		}
-		this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR);
+		this.world.setRoadElement(this.pos.x, this.pos.y, this.state);
 	}
 	
 	/* XXX Not used */
