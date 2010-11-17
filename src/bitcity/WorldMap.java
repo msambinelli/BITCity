@@ -78,10 +78,17 @@ public class WorldMap extends JPanel implements Runnable {
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 							(int)stepw, (int)steph);
 					
-					if (this.world.getSemaphores().get(elem).isopen(i, j)){
-						ctx.setColor(Color.GREEN);
-					} else {
+					
+					switch (this.world.getSemaphores().get(elem).status(i, j)) {
+					case ALERT:
+						ctx.setColor(Color.YELLOW);
+						break;
+					case CLOSED:
 						ctx.setColor(Color.RED);
+						break;
+					case OPEN:
+						ctx.setColor(Color.GREEN);
+						break;
 					}
 					//ctx.setColor(Color.YELLOW);
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 

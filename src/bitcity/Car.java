@@ -14,6 +14,8 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import bitcity.Semaphore.SEM_STATUS;
+
 public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
 	private World world;
@@ -63,14 +65,14 @@ public class Car extends MovingObject {
 		
 		if (this.world.getSemaphores().containsKey(ahead)) {
 			
-			if (this.world.getSemaphores().get(ahead).isopen(pAhead)){
+			if (this.world.getSemaphores().get(ahead).status(pAhead) != SEM_STATUS.CLOSED){
 				if (this.world.getRoadElement(pAhead.x, pAhead.y) != World.CAR_STOPED){
 					this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 					this.pos = this.getNextPos(this.direction, this.pos); /* XXX */
 				} else {
 					this.state = World.CAR_STOPED;
 					this.world.setRoadElement(this.pos.x, this.pos.y, World.CAR_STOPED);
-					//this.bell();
+					this.bell();
 				}
 			} else {
 				this.state = World.CAR_STOPED;

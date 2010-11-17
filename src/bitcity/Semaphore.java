@@ -6,27 +6,42 @@ import java.awt.Point;
 public class Semaphore {
 	
 	private Point position;
+	public static enum SEM_STATUS {CLOSED, ALERT, OPEN};
+	
+	private SEM_STATUS status;
 	
 	public Semaphore(){
 		this.position = new Point(-1, -1);
+		this.status = SEM_STATUS.OPEN;
 	}
 	
 	public synchronized void open(Point p){
 		this.position = p;
+		this.status = SEM_STATUS.OPEN;
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(3000);
+			this.status = SEM_STATUS.ALERT;
+			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	public boolean isopen(int i, int j){
+	public SEM_STATUS status(int i, int j){
 		Point p = new Point(i, j);
-		return this.position.equals(p);
+		if (this.position.equals(p)){
+			return this.status;
+		} else {
+			return SEM_STATUS.CLOSED;
+		}
 	}
 	
-	public boolean isopen(Point p){
-		return this.position.equals(p);
+	public SEM_STATUS status(Point p){
+		if (this.position.equals(p)){
+			return this.status;
+		} else {
+			return SEM_STATUS.CLOSED;
+		}
 	}
 }
