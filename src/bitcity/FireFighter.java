@@ -48,7 +48,7 @@ public class FireFighter extends Car {
 		while (true) {
 			try {
 				this.move();
-				Thread.sleep((int)(1000/20.));
+				Thread.sleep((int)(1000/25.));
 			} catch (Exception e) {
 				System.out.println("#### " + e.getMessage());
 				break;
