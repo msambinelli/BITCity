@@ -25,7 +25,7 @@ public abstract class MovingObject extends WorldObject {
 		case '>':
 			return new Point(pos.x, pos.y + 1);
 		default:
-			throw new Exception("Invalid direction '" + direction + "'");
+			throw new Exception("Invalid direction '" + direction + "', at " + pos);
 		}
 	}
 	
