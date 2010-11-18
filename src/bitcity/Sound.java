@@ -1,7 +1,9 @@
 package bitcity;
 
+import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.LineUnavailableException;
@@ -17,9 +19,12 @@ public enum Sound {
 	
 	private Sound (String filename) {
 		File soundFile = new File(filename);
+		
 		try {
 			AudioInputStream soundStream = AudioSystem.getAudioInputStream(soundFile);
-			this.clip = AudioSystem.getClip();
+			AudioFormat format = soundStream.getFormat();
+			DataLine.Info info = new DataLine.Info(Clip.class, format);
+			this.clip = (Clip)AudioSystem.getLine(info);
 			this.clip.open(soundStream);
 		} catch (UnsupportedAudioFileException e) {
 			System.out.println("Caught exception: " + e.getMessage());
