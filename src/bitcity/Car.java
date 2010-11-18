@@ -18,7 +18,7 @@ import bitcity.Semaphore.SEM_STATUS;
 
 public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
-	private World world;
+	protected World world;
 	private int state = World.CAR_RUNNING;
 	
 	public Car(World world, Point startPos, char direction) {
@@ -60,6 +60,10 @@ public class Car extends MovingObject {
 			/* '&' simboliza estacionamento agora. */
 			this.world.setRoadElement(this.pos.x, this.pos.y, World.ROAD);
 			throw new Exception("Destroy car");
+		}
+		
+		if (this.world.getRoadElement(this.pos.x, this.pos.y) == World.FIREFIGHTER) {
+			throw new Exception("I've been wiped out!");
 		}
 		
 		Point pAhead = this.getNextPos(this.direction, this.pos);

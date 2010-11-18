@@ -13,6 +13,7 @@ public class WorldMap extends JPanel implements Runnable {
 	 */
 	private static final long serialVersionUID = 2398485906470095960L;
 
+	public static boolean firefighterAround = false;
 	public static int carCount = 0;
 	private static final int carLimit = 70;
 	
@@ -47,6 +48,9 @@ public class WorldMap extends JPanel implements Runnable {
 							break;
 						}
 					}
+				} else if ((WorldMap.carCount >= WorldMap.carLimit - 5) && !WorldMap.firefighterAround) {
+					startPos = this.world.getRandomStartPos();
+					FireFighter.createCar(this.world, startPos).start();
 				}
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
@@ -115,6 +119,8 @@ public class WorldMap extends JPanel implements Runnable {
 				} else if ((this.world.getRoadElement(i, j) & World.CAR) != 0) { 
 					/* This is a car. */
 					ctx.setColor(Color.BLUE);
+				} else if (this.world.getRoadElement(i, j) == World.FIREFIGHTER) {
+					ctx.setColor(Color.RED);
 				} else if (this.world.isRoad(i, j)) {
 					/* Road. */
 					ctx.setColor(Color.BLACK);

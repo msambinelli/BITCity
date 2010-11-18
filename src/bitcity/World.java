@@ -13,6 +13,7 @@ public class World {
 	private ArrayList<TrafficLight> trafficLight;
 	
 	final public static int ROAD = 1;
+	final public static int FIREFIGHTER = 16;
 	final public static int CAR = 4;
 	final public static int CAR_RUNNING = 5;
 	final public static int CAR_STOPPED = 6;
