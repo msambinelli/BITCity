@@ -43,6 +43,8 @@ public class Application {
 			return;
 		}
 		
+		Sound.init();
+		
 		/* XXX Testing. */
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {

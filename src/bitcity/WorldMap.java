@@ -48,7 +48,8 @@ public class WorldMap extends JPanel implements Runnable {
 							break;
 						}
 					}
-				} else if ((WorldMap.carCount >= WorldMap.carLimit - 5) && !WorldMap.firefighterAround) {
+				} else if ((WorldMap.carCount >= WorldMap.carLimit - 5) && !WorldMap.firefighterAround &&
+						Math.random() < 0.1) {
 					startPos = this.world.getRandomStartPos();
 					FireFighter.createCar(this.world, startPos).start();
 				}

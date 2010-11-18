@@ -27,13 +27,13 @@ public class FireFighter extends Car {
 		this.world.setRoadElement(this.pos.x, this.pos.y, World.FIREFIGHTER);
 		if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction && 
 				!this.world.getSemaphores().containsKey(ahead)) {
-			/* Chance de mudar de direção. */
+			/* Chance de mudar de dire√ßao. */
 			nextPos = this.getNextPos(ahead, this.pos);
 			if (this.world.getElementAt(nextPos) == ahead) {
-				/* Com certeza precisa mudar de direção. */
+				/* Com certeza precisa mudar de dire√ßao. */
 				this.direction = ahead;
 			} else {
-				/* Tem chance de trocar de direção. */
+				/* Tem chance de trocar de dire√ßao. */
 				prob = Math.random();
 				if (prob < changeDirectionProb) {
 					this.direction = ahead;
@@ -43,6 +43,8 @@ public class FireFighter extends Car {
 	}
 	
 	public void run() {
+		Sound.FIREFIGHTER_SIREN.loop();
+		
 		while (true) {
 			try {
 				this.move();
@@ -52,11 +54,13 @@ public class FireFighter extends Car {
 				break;
 			}
 		}
+		
+		Sound.FIREFIGHTER_SIREN.stop();
 		WorldMap.firefighterAround = false;
 	}
 	
 	
-	/* XXX Não tem um jeito de nãu duplicar isso da classe Car ? */
+	/* XXX N√£o tem um jeito de n√£u duplicar isso da classe Car ? */
 	public static FireFighter createCar(World world, Point startPos) throws Exception {
 		char up, down, left, right;
 		char direction;
