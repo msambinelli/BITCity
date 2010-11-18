@@ -1,18 +1,16 @@
 package bitcity;
 
 import java.awt.Point;
-import java.awt.peer.LightweightPeer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Scanner;
 
 public class Parser {
 	private FileReader fileIn;
 	private Scanner input;
-	
+	private int height_tiles, width_tiles;
 	
 	public static final char SENTINEL = '!';
 	public static final char SIDEWALK = '#';
@@ -23,6 +21,14 @@ public class Parser {
 		this.input = new Scanner(fileIn);
 	}
 	
+	public int getHeightTiles() {
+		return this.height_tiles;
+	}
+	
+	public int getWidthTiles() {
+		return this.width_tiles;
+	}
+
 	public World parse() throws Exception {
 		String line;
 		HashMap<Character, Semaphore> semaphores = new HashMap<Character, Semaphore>();
@@ -39,6 +45,9 @@ public class Parser {
 			startAmount = input.nextInt();
 			toSync = input.nextInt();
 			input.nextLine();
+			
+			this.height_tiles = rows;
+			this.width_tiles = cols;
 			
 			if (startAmount <= 0) {
 				throw new Exception("Invalid amount of starting points: " + startAmount);
@@ -63,6 +72,12 @@ public class Parser {
 				line = input.nextLine();
 				for (j = 1; j <= cols; j++) {
 					curr = line.charAt(j - 1);
+					if (curr == '\t') {
+						curr = ' ';
+						System.err.println("Warning: A tab at (" + i + ", " + j + ") has been replaced " +
+								"by a space");
+					}
+					
 					if (curr == '*') {
 						if (startAmount == 0) {
 							throw new Exception("There are more starting points than declared");
@@ -75,6 +90,7 @@ public class Parser {
 							System.out.println("Traffic light at " + i + ", " + j);
 							System.out.println("Key " + curr);
 							if (!semaphores.containsKey(curr)){
+								toSync--;
 								semaphores.put(curr, new Semaphore());
 							}
 					
@@ -86,12 +102,14 @@ public class Parser {
 					roadMap[i][j] = 0;
 				}
 			}
-			/*
-			for (int z = 0; z < trafficLight.size(); z++){
-				System.out.println("xxx " + z + " " + trafficLight.get(z).getPosition());
+			
+			if (toSync != 0) {
+				throw new Exception("Check your traffic light groups " + toSync);
 			}
-			*/
-			//System.exit(1);
+			if (startAmount != 0) {
+				System.err.println("Maybe I should have found " + startAmount + " more starting points, " +
+						"but I failed.");
+			}
 		} finally {
 			fileIn.close();
 		}
@@ -104,7 +122,8 @@ public class Parser {
 	
 	
 	private void buildRoadMap(char map[][], int roadMap[][], int row, int col) {
-		if (map[row][col] == SENTINEL || map[row][col] == SIDEWALK || map[row][col] == GARAGE) {
+		if (map[row][col] == SENTINEL || map[row][col] == SIDEWALK || map[row][col] == GARAGE ||
+				map[row][col] == '$') {
 			return;
 		}
 		if (roadMap[row][col] == 0) {
