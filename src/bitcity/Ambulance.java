@@ -61,7 +61,7 @@ public class Ambulance extends Car {
 	}
 	
 	
-	/* XXX Não tem um jeito de nãu duplicar isso da classe Car ? */
+	/* XXX Não tem um jeito de não duplicar isso da classe Car ? */
 	public static Ambulance createCar(World world, Point startPos) throws Exception {
 		char up, down, left, right;
 		char direction;
