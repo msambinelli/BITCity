@@ -141,7 +141,24 @@ public class Car extends MovingObject {
 	}
 	
 	public void bell(){
-		File soundFile = new File("data/beepbeep.wav");
+		File soundFile;
+		int pick = (int)Math.round(Math.random() * 2);
+		
+		switch (pick) {
+		case 0:
+			soundFile = new File("data/beepbeep.wav");
+			break;
+		case 1:
+			soundFile = new File("data/car-honk-1.wav");
+			break;
+		case 2:
+			soundFile = new File("data/car-honk-2.wav");
+			break;
+		default:
+			soundFile = new File("data/beepbeep.wav");
+			System.err.println("Nice, 2 * 1 > 2");
+		}
+		
 
 		AudioInputStream audioInputStream = null;
 		try { 
