@@ -13,7 +13,7 @@ import java.io.File;
 
 public enum Sound {
 	CAR_HONK("data/beepbeep.wav"),
-	FIREFIGHTER_SIREN("data/Firetruck Siren.wav");
+	AMBULANCE_SIREN("data/Ambulance_1.wav");
 
 	private Clip clip;
 	

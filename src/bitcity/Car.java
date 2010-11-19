@@ -6,6 +6,9 @@ import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 
+/*import javax.sound.sampled.LineListener;
+import javax.sound.sampled.LineEvent;*/
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -20,6 +23,7 @@ public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
 	protected World world;
 	private int state = World.CAR_RUNNING;
+	//private boolean honking = false;
 	
 	public Car(World world, Point startPos, char direction) {
 		super(startPos, direction);
@@ -36,13 +40,13 @@ public class Car extends MovingObject {
 		down = world.getElementAt(startPos.x + 1, startPos.y);
 		left = world.getElementAt(startPos.x, startPos.y - 1);
 		right = world.getElementAt(startPos.x, startPos.y + 1);
-		if (up != ' ' && up != Parser.SENTINEL && up != Parser.SIDEWALK) {
+		if (up != ' ' && up != Parser.SENTINEL && up != Parser.SIDEWALK && up != '$') {
 			direction = up;
-		} else if (down != ' ' && down != Parser.SENTINEL && down != Parser.SIDEWALK) {
+		} else if (down != ' ' && down != Parser.SENTINEL && down != Parser.SIDEWALK && down != '$') {
 			direction = down;
-		} else if (left != ' ' && left != Parser.SENTINEL && left != Parser.SIDEWALK) {
+		} else if (left != ' ' && left != Parser.SENTINEL && left != Parser.SIDEWALK && left != '$') {
 			direction = left;
-		} else if (right != ' ' && right != Parser.SENTINEL && right != Parser.SIDEWALK) {
+		} else if (right != ' ' && right != Parser.SENTINEL && right != Parser.SIDEWALK && right != '$') {
 			direction = right;
 		} else {
 			throw new Exception("No initial direction found.");
@@ -62,7 +66,7 @@ public class Car extends MovingObject {
 			throw new Exception("Destroy car");
 		}
 		
-		if (this.world.getRoadElement(this.pos.x, this.pos.y) == World.FIREFIGHTER) {
+		if (this.world.getRoadElement(this.pos.x, this.pos.y) == World.AMBULANCE) {
 			throw new Exception("I've been wiped out!");
 		}
 		
@@ -93,13 +97,13 @@ public class Car extends MovingObject {
 				this.pos = this.getNextPos(this.direction, this.pos);
 				this.state = World.CAR_RUNNING;
 				if (ahead != ' ' && ahead != Parser.SIDEWALK && ahead != this.direction) {
-					/* Chance de mudar de direção. */
+					/* Chance de mudar de dire√ßao. */
 					nextPos = this.getNextPos(ahead, this.pos);
 					if (this.world.getElementAt(nextPos) == ahead) {
-						/* Com certeza precisa mudar de direção. */
+						/* Com certeza precisa mudar de dire√ß√£o. */
 						this.direction = ahead;
 					} else {
-						/* Tem chance de trocar de direção. */
+						/* Tem chance de trocar de dire√ß√£o. */
 						prob = Math.random();
 						if (prob < changeDirectionProb) {
 							this.direction = ahead;
@@ -182,6 +186,20 @@ public class Car extends MovingObject {
 			auline.drain();
 			auline.close();
 		}
+		/*
+		if (honking == false) {
+			Sound.CAR_HONK.play();
+			Sound.CAR_HONK.addListener(new LineListener() {
+				public void update(LineEvent event) {
+					if (event.getType() != LineEvent.Type.STOP) {
+						return;
+					}
+					honking = false;
+				}
+			});
+			honking = true;
+		}*/
 	}
+
 }
 
