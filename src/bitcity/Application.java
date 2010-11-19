@@ -16,7 +16,7 @@ public class Application {
 	 */
 	public static void main(String[] args) {
 		final Application app = new Application();
-		Parser parser;
+		final Parser parser;
 		
 		if (args.length != 1) {
 			System.err.println("A map is required");
@@ -50,8 +50,9 @@ public class Application {
 			public void run() {
 				JFrame frame = new JFrame("Bitcity");
 				frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				//frame.setPreferredSize(new Dimension(640, 398));
 				frame.setPreferredSize(new Dimension(800, (int)(800/1.608)));
+				//frame.setPreferredSize(new Dimension(parser.getWidthTiles() * 10,
+				//		parser.getHeightTiles() * 17));
 				frame.getContentPane().add(new WorldMap(app.world));
 				frame.pack();
 				frame.setLocationRelativeTo(null);
