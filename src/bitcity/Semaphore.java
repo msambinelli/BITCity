@@ -7,12 +7,15 @@ public class Semaphore {
 	
 	private Point position;
 	public static enum SEM_STATUS {CLOSED, ALERT, OPEN};
-	
+	private int delay1, delay2;
 	private SEM_STATUS status;
 	
 	public Semaphore(){
 		this.position = new Point(-1, -1);
 		this.status = SEM_STATUS.OPEN;
+		this.delay1 = (int)(Math.random() * 500) + 2700;
+		this.delay2 = (int)(Math.random() * 700) + 1700;
+		System.out.println("Delay 1 = " + this.delay1 + ", Delay 2 = " + this.delay2);
 	}
 	
 	/* Ilustração do primeiro problema de não se usar syncronized neste local
@@ -32,9 +35,9 @@ public class Semaphore {
 		this.position = p;
 		this.status = SEM_STATUS.OPEN;
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(this.delay1);
 			this.status = SEM_STATUS.ALERT;
-			Thread.sleep(2000);
+			Thread.sleep(this.delay2);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
