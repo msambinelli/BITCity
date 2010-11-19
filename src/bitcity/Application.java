@@ -3,10 +3,16 @@ package bitcity;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import javax.swing.JFrame;
+import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.WindowConstants;
+import javax.swing.KeyStroke;
+import javax.swing.InputMap;
+import javax.swing.ActionMap;
+import javax.swing.Action;
+import javax.swing.AbstractAction;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,6 +22,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+
 
 public class Application {
 
@@ -75,10 +82,33 @@ public class Application {
 		app.frame.setLocationRelativeTo(null);
 		app.frame.setVisible(true);
 		
+		@SuppressWarnings("serial")
+		Action actionIncSpeed = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				app.world.incSpeed(true);
+				app.showWorldSpeed.setText("World speed: " + app.world.getWorldSpeed());
+			}
+		};
+		@SuppressWarnings("serial")
+		Action actionDecSpeed = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				app.world.incSpeed(false);
+				app.showWorldSpeed.setText("World speed: " + app.world.getWorldSpeed());
+			}
+		};
+		InputMap inputMap = bitcity.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		inputMap.put(KeyStroke.getKeyStroke('+'), "incSpeed");
+		inputMap.put(KeyStroke.getKeyStroke('='), "incSpeed");
+		inputMap.put(KeyStroke.getKeyStroke('-'), "decSpeed");
+		inputMap.put(KeyStroke.getKeyStroke('_'), "decSpeed");
+		ActionMap actionMap = bitcity.getActionMap();
+		actionMap.put("incSpeed", actionIncSpeed);
+		actionMap.put("decSpeed", actionDecSpeed);
+		
 		app.increaseSpeed = new JMenuItem("Faster");
 		app.decreaseSpeed = new JMenuItem("Slower");
-		app.increaseSpeed.setMnemonic('+');
-		app.decreaseSpeed.setMnemonic('-');
+		app.increaseSpeed.setAccelerator(KeyStroke.getKeyStroke('+'));
+		app.decreaseSpeed.setAccelerator(KeyStroke.getKeyStroke('-'));
 		ButtonHandler handler = app.new ButtonHandler();
 		app.increaseSpeed.addActionListener(handler);
 		app.decreaseSpeed.addActionListener(handler);
