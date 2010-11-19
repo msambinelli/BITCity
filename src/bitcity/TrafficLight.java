@@ -7,6 +7,7 @@ public class TrafficLight extends WorldObject {
 
 	private Point position;
 	private Semaphore controler;
+	private static final int delay = 420;
 	
 	public TrafficLight(int i, int j, Semaphore semaphore) {
 		this.position = new Point(i, j);
@@ -17,7 +18,7 @@ public class TrafficLight extends WorldObject {
 		while (true){
 			this.controler.open(this.position);
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(TrafficLight.delay);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
