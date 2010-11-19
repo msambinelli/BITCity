@@ -13,6 +13,7 @@ public abstract class MovingObject extends WorldObject {
 	}
 	
 	abstract void draw(Graphics2D g);
+	abstract int moveRate();
 	
 	public Point getNextPos(char direction, Point pos) throws Exception {
 		switch (direction) {

@@ -42,13 +42,17 @@ public class Ambulance extends Car {
 		}
 	}
 	
+	public int moveRate() {
+		return (int)Math.round(this.world.getWorldSpeed() * 6.5);
+	}
+	
 	public void run() {
 		try {
 			Sound.AMBULANCE_SIREN.loop();
 			while (true) {
 				try {
 					this.move();
-					Thread.sleep((int)(1000/25.));
+					Thread.sleep((int)(1000./this.moveRate()));
 				} catch (Exception e) {
 					System.out.println("#### " + e.getMessage());
 					break;

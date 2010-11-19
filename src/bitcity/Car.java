@@ -55,6 +55,10 @@ public class Car extends MovingObject {
 		return new Car(world, startPos, direction);
 	}
 	
+	public int moveRate() {
+		return this.world.getWorldSpeed() * 5;
+	}
+	
 	public synchronized void move() throws Exception {
 		Point nextPos;
 		double prob;
@@ -130,7 +134,7 @@ public class Car extends MovingObject {
 		while (true) {
 			try {
 				this.move();
-				Thread.sleep((int)(1000/20.));
+				Thread.sleep((int)(1000./this.moveRate()));
 			} catch (Exception e) {
 				System.out.println(">>>> " + e.getMessage());
 				break;

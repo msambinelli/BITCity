@@ -3,13 +3,28 @@ package bitcity;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 public class Application {
 
-	World world;
+	private World world;
+	private JMenuItem increaseSpeed, decreaseSpeed, showWorldSpeed;
+	private JCheckBoxMenuItem fullscreen;
+	private JPopupMenu popup;
+	private JFrame frame;
+	private Dimension currSize;
 	
 	/**
 	 * @param args
@@ -45,19 +60,81 @@ public class Application {
 		
 		Sound.init();
 		
-		/* XXX Testing. */
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				JFrame frame = new JFrame("Bitcity");
-				frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-				frame.setPreferredSize(new Dimension(800, (int)(800/1.608)));
-				//frame.setPreferredSize(new Dimension(parser.getWidthTiles() * 10,
-				//		parser.getHeightTiles() * 17));
-				frame.getContentPane().add(new WorldMap(app.world));
-				frame.pack();
-				frame.setLocationRelativeTo(null);
+		WorldMap bitcity = new WorldMap(app.world);
+		Thread mapThread = new Thread(bitcity);
+		
+		
+		/* GUI */
+		app.frame = new JFrame("Bitcity");
+		
+		app.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		app.frame.setPreferredSize(new Dimension(parser.getWidthTiles() * 10,
+				parser.getHeightTiles() * 17));
+		app.frame.getContentPane().add(bitcity);
+		app.frame.pack();
+		app.frame.setLocationRelativeTo(null);
+		app.frame.setVisible(true);
+		
+		app.increaseSpeed = new JMenuItem("Faster");
+		app.decreaseSpeed = new JMenuItem("Slower");
+		app.increaseSpeed.setMnemonic('+');
+		app.decreaseSpeed.setMnemonic('-');
+		ButtonHandler handler = app.new ButtonHandler();
+		app.increaseSpeed.addActionListener(handler);
+		app.decreaseSpeed.addActionListener(handler);
+		app.fullscreen = new JCheckBoxMenuItem("Fullscreen");
+		CheckHandler checkHandler = app.new CheckHandler();
+		app.fullscreen.addItemListener(checkHandler);
+		
+		app.showWorldSpeed = new JMenuItem("World speed: " + app.world.getWorldSpeed());
+		app.popup = new JPopupMenu();
+		app.popup.add(app.showWorldSpeed);
+		app.popup.getComponent(0).setEnabled(false);
+		app.popup.add(app.increaseSpeed);
+		app.popup.add(app.decreaseSpeed);
+		app.popup.addSeparator();
+		app.popup.add(app.fullscreen);
+		
+		app.frame.addMouseListener(
+				new MouseAdapter() {
+					public void mousePressed(MouseEvent event) {
+						if (event.isPopupTrigger()) {
+							app.popup.show(event.getComponent(), event.getX(), event.getY());
+						}
+					}
+				});
+		/* End GUI. */
+		
+		mapThread.start();
+	}
+
+	
+	private class ButtonHandler implements ActionListener {
+		public void actionPerformed(ActionEvent event) {
+			world.incSpeed(event.getSource() == increaseSpeed);
+			showWorldSpeed.setText("World speed: " + world.getWorldSpeed());
+		}
+	}
+
+	private class CheckHandler implements ItemListener {
+		public void itemStateChanged(ItemEvent s) {
+			GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+			
+			if (fullscreen.isSelected()) {
+				currSize = frame.getSize(); 
+				frame.dispose();
+				frame.setUndecorated(true);
 				frame.setVisible(true);
+				
+				gd.setFullScreenWindow(frame);
+			} else {
+				frame.dispose();
+				frame.setUndecorated(false);
+				frame.setSize(currSize);
+				frame.setVisible(true);
+
+				gd.setFullScreenWindow(null);
 			}
-		});
+		}
 	}
 }

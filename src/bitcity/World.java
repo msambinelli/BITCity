@@ -12,6 +12,8 @@ public class World {
 	private int road[][];
 	private ArrayList<TrafficLight> trafficLight;
 	
+	private int worldSpeed = 1;
+	
 	final public static int ROAD = 1;
 	final public static int AMBULANCE = 16;
 	final public static int CAR = 4;
@@ -104,5 +106,23 @@ public class World {
 	public  ArrayList<TrafficLight> getTrafficLight() {
 		
 		return this.trafficLight;
+	}
+	
+
+	public int getWorldSpeed() {
+		return this.worldSpeed;
+	}
+	
+	public void setWorldSpeed(int speed) {
+		this.worldSpeed = speed;
+	}
+	
+	public void incSpeed(boolean increase) {
+		if (increase && this.worldSpeed > 4)
+			return;
+		else if (!increase && this.worldSpeed == 1)
+			return;
+		
+		this.setWorldSpeed(this.getWorldSpeed() + (increase ? 1 : -1));
 	}
 }
