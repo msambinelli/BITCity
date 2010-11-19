@@ -15,7 +15,7 @@ public class WorldMap extends JPanel implements Runnable {
 
 	public static boolean ambulanceAround = false;
 	public static int carCount = 0;
-	private static final int carLimit = 51;
+	private static final int carLimit = 70;
 	
 	private World world;
 	private Thread thread;
@@ -92,9 +92,13 @@ public class WorldMap extends JPanel implements Runnable {
 				} else if (this.world.getSemaphores().containsKey(elem)) {
 					/* Traffic light. */
 					ctx.setColor(Color.BLACK);
+					if ((this.world.getRoadElement(i, j) & World.CAR) != 0) {
+						ctx.setColor(Color.BLUE);
+					} else if (this.world.getRoadElement(i, j) == World.AMBULANCE) {
+						ctx.setColor(Color.WHITE);
+					}
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
-							(int)stepw, (int)steph);
-					
+							(int)stepw + 1, (int)steph + 1);
 					
 					switch (this.world.getSemaphores().get(elem).status(i, j)) {
 					case ALERT:
@@ -109,9 +113,9 @@ public class WorldMap extends JPanel implements Runnable {
 					}
 					//ctx.setColor(Color.YELLOW);
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
-							(int)stepw, (int)stepw);
+							(int)stepw + 1, (int)stepw + 1);
 					
-					ctx.setColor(Color.gray);
+					ctx.setColor(Color.BLACK);
 					
 					ctx.drawString("" + this.world.getElementAt(i, j) + "",
 							(int)((j - 1) * stepw), (int)((i - 1) * steph) + (steph / 2));
