@@ -124,5 +124,6 @@ public class World {
 			return;
 		
 		this.setWorldSpeed(this.getWorldSpeed() + (increase ? 1 : -1));
+		WorldMap.FPS = 27 + this.getWorldSpeed() * 3;
 	}
 }
