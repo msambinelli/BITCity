@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.Iterator;
 
 public class Parser {
 	private FileReader fileIn;
@@ -92,6 +93,8 @@ public class Parser {
 							if (!semaphores.containsKey(curr)){
 								toSync--;
 								semaphores.put(curr, new Semaphore());
+							} else {
+								semaphores.get(curr).incGroupSize();
 							}
 					
 							trafficLight.add(new TrafficLight(i, j, semaphores.get(curr)));
@@ -112,6 +115,12 @@ public class Parser {
 			}
 		} finally {
 			fileIn.close();
+		}
+		
+		Iterator<Semaphore> it = semaphores.values().iterator();
+		while (it.hasNext()) {
+			Semaphore item = it.next();
+			item.adjustDelay();
 		}
 		
 		/* Construct the road map now. */
