@@ -88,8 +88,10 @@ public class Parser {
 					} else {
 						/* Semáforos */
 						if (((int)(curr) - (int)'A') >= 0 && ((int)(curr) - (int)'A') <= ((int)'Z' - (int)'A')) {
-							System.out.println("Traffic light at " + i + ", " + j);
-							System.out.println("Key " + curr);
+							if (Application.DEBUG) {
+								System.out.println("Traffic light at " + i + ", " + j);
+								System.out.println("Key " + curr);
+							}
 							if (!semaphores.containsKey(curr)){
 								toSync--;
 								semaphores.put(curr, new Semaphore());

@@ -20,7 +20,8 @@ public class Semaphore {
 		this.groupSize = 1;
 		this.delay1 = (int)(Math.random() * 500) + 2700;
 		this.delay2 = (int)(Math.random() * 700) + 1700;
-		System.out.println("Delay 1 = " + this.delay1 + ", Delay 2 = " + this.delay2);
+		if (Application.DEBUG)
+			System.out.println("Delay 1 = " + this.delay1 + ", Delay 2 = " + this.delay2);
 	}
 	
 	public void incGroupSize() {
@@ -30,10 +31,10 @@ public class Semaphore {
 	public void adjustDelay() {
 		if (this.delayAdjusted)
 			return;
-		System.out.println("Size: " + this.groupSize);
+		if (Application.DEBUG) System.out.println("Size: " + this.groupSize);
 		this.delay1 = (int)Math.round(this.delay1 / (0.5 * this.groupSize));
 		this.delay2 = (int)Math.round(this.delay2 / (0.5 * this.groupSize));
-		System.out.println("    " + this.delay1 + ", " + this.delay2);
+		if (Application.DEBUG) System.out.println("    " + this.delay1 + ", " + this.delay2);
 	}
 	
 	/* Ilustração do primeiro problema de não se usar syncronized neste local

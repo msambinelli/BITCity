@@ -34,6 +34,9 @@ public class Application {
 	private JFrame frame;
 	private Dimension currSize;
 	
+	/* Set DEBUG to true in order to print things to System.out */
+	public static final boolean DEBUG = true; 
+	
 	/**
 	 * @param args
 	 */

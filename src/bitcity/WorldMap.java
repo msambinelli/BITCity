@@ -45,9 +45,9 @@ public class WorldMap extends JPanel implements Runnable {
 					for (int i = 0; i < 2; i++) {
 						startPos = this.world.getRandomStartPos();
 						if ((this.world.getRoadElement(startPos.x, startPos.y) & World.CAR) != 0) {
-							System.out.println(">> There is a car in the soup");
+							if (Application.DEBUG) System.out.println(">> There is a car in the soup");
 						} else {
-							System.out.println(">> Add car");
+							if (Application.DEBUG) System.out.println(">> Add car");
 							Car.createCar(this.world, startPos).start();
 							break;
 						}

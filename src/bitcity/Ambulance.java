@@ -56,7 +56,7 @@ public class Ambulance extends Car {
 					this.move();
 					Thread.sleep((int)(1000./this.moveRate()));
 				} catch (Exception e) {
-					System.out.println("#### " + e.getMessage());
+					if (Application.DEBUG) System.out.println("#### " + e.getMessage());
 					break;
 				}
 			}
