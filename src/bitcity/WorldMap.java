@@ -18,6 +18,12 @@ public class WorldMap extends JPanel implements Runnable {
 	private static final int carLimit = 70;
 	public static int FPS = 30;
 	
+	/* Color */
+	private static final Color BACKGROUND_COLOR = new Color(0, (float)0.4, 0);
+	private static final Color SIDEWALK_COLOR = new Color((float)0.5, (float)0.5, (float)0.5);
+	private static final Color DECORATION_COLOR = new Color(0, (float)0.2, 0);
+	private static final Color ROAD_COLOR = Color.black;
+	
 	private World world;
 	
 	public WorldMap(World world) {
@@ -52,10 +58,10 @@ public class WorldMap extends JPanel implements Runnable {
 					Ambulance.createCar(this.world, startPos).start();
 				}
 			} catch (InterruptedException e) {
-				System.out.println(e.getMessage());
+				System.err.println(e.getMessage());
 				break;
 			} catch (Exception e) {
-				System.out.println("Nice unwanted exception :) " + e.getMessage());
+				System.err.println("Nice unwanted exception :) " + e.getMessage());
 			}
 			repaint();
 		}
@@ -74,7 +80,7 @@ public class WorldMap extends JPanel implements Runnable {
 		steph = (float)height / (this.world.rowCount() - 1);
 		//System.out.println("stepw = " + stepw + ", steph = " + steph);
 		
-		ctx.setColor(new Color(0, (float)0.7, 0));
+		ctx.setColor(WorldMap.BACKGROUND_COLOR);
 		ctx.fillRect(0, 0, width, height);
 		
 		//System.out.println("redrawing");
@@ -83,17 +89,17 @@ public class WorldMap extends JPanel implements Runnable {
 				elem = this.world.getElementAt(i, j);
 
 				if (elem == Parser.SIDEWALK || elem == Parser.GARAGE) {
-					ctx.setColor(new Color((float)0.7, (float)0.7, (float)0.7));
+					ctx.setColor(WorldMap.SIDEWALK_COLOR);
 				} else if (elem == '$') {
 					/* Some kind of decoration. */
-					ctx.setColor(new Color(0, (float)0.5, 0));
+					ctx.setColor(WorldMap.DECORATION_COLOR);
 				} else if (this.world.getSemaphores().containsKey(elem)) {
 					/* Traffic light. */
-					ctx.setColor(Color.BLACK);
+					ctx.setColor(WorldMap.ROAD_COLOR);
 					if ((this.world.getRoadElement(i, j) & World.CAR) != 0) {
-						ctx.setColor(Color.BLUE);
+						ctx.setColor(Car.COLOR);
 					} else if (this.world.getRoadElement(i, j) == World.AMBULANCE) {
-						ctx.setColor(Color.WHITE);
+						ctx.setColor(Ambulance.COLOR);
 					}
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 							(int)stepw + 1, (int)steph + 1);
@@ -109,11 +115,10 @@ public class WorldMap extends JPanel implements Runnable {
 						ctx.setColor(Color.GREEN);
 						break;
 					}
-					//ctx.setColor(Color.YELLOW);
 					ctx.fillRect((int)((j - 1) * stepw), (int)((i - 1) * steph), 
 							(int)stepw + 1, (int)stepw + 1);
 					
-					ctx.setColor(Color.BLACK);
+					ctx.setColor(WorldMap.ROAD_COLOR);
 					
 					ctx.drawString("" + this.world.getElementAt(i, j) + "",
 							(int)((j - 1) * stepw), (int)((i - 1) * steph) + (steph / 2));
@@ -121,12 +126,12 @@ public class WorldMap extends JPanel implements Runnable {
 					continue;
 				} else if ((this.world.getRoadElement(i, j) & World.CAR) != 0) { 
 					/* This is a car. */
-					ctx.setColor(Color.BLUE);
+					ctx.setColor(Car.COLOR);
 				} else if (this.world.getRoadElement(i, j) == World.AMBULANCE) {
-					ctx.setColor(Color.WHITE);
+					ctx.setColor(Ambulance.COLOR);
 				} else if (this.world.isRoad(i, j)) {
 					/* Road. */
-					ctx.setColor(Color.BLACK);
+					ctx.setColor(WorldMap.ROAD_COLOR);
 				} else {
 					continue;
 				}

@@ -122,8 +122,7 @@ public class Parser {
 	
 	
 	private void buildRoadMap(char map[][], int roadMap[][], int row, int col) {
-		if (map[row][col] == SENTINEL || map[row][col] == SIDEWALK || map[row][col] == GARAGE ||
-				map[row][col] == '$') {
+		if (this.isNotRoad(map, row, col)) {
 			return;
 		}
 		if (roadMap[row][col] == 0) {
@@ -133,5 +132,12 @@ public class Parser {
 			buildRoadMap(map, roadMap, row + 1, col);
 			buildRoadMap(map, roadMap, row - 1, col);
 		}
+	}
+	
+	private boolean isNotRoad(char map[][], int row, int col) {
+		if (map[row][col] == SENTINEL || map[row][col] == SIDEWALK || map[row][col] == GARAGE ||
+				map[row][col] == '$')
+			return true;
+		return false;
 	}
 }

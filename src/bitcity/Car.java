@@ -23,6 +23,7 @@ public class Car extends MovingObject {
 	private static double changeDirectionProb = 0.2;
 	protected World world;
 	private int state = World.CAR_RUNNING;
+	public static final Color COLOR = Color.BLUE;
 	//private boolean honking = false;
 	
 	public Car(World world, Point startPos, char direction) {
