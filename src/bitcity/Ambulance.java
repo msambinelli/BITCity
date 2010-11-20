@@ -5,7 +5,7 @@ import java.awt.Point;
 
 public class Ambulance extends Car {
 
-	private static double changeDirectionProb = 0.15;
+	private static double changeDirectionProb = 0.1;
 	public static final Color COLOR = Color.WHITE;
 	
 	public Ambulance(World world, Point startPos, char direction) {
