@@ -14,6 +14,7 @@ import javax.swing.ActionMap;
 import javax.swing.Action;
 import javax.swing.AbstractAction;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
@@ -96,14 +97,31 @@ public class Application {
 				app.showWorldSpeed.setText("World speed: " + app.world.getWorldSpeed());
 			}
 		};
+		@SuppressWarnings("serial")
+		Action actionLeaveFullscreen = new AbstractAction() {
+			public void actionPerformed(ActionEvent actionEvent) {
+				GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+				if (gd.getFullScreenWindow() == null)
+					return;
+				
+				app.frame.dispose();
+				app.frame.setUndecorated(false);
+				app.frame.setSize(app.currSize);
+				app.frame.setVisible(true);
+				app.fullscreen.setSelected(false);
+				gd.setFullScreenWindow(null);
+			}
+		};
 		InputMap inputMap = bitcity.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		inputMap.put(KeyStroke.getKeyStroke('+'), "incSpeed");
 		inputMap.put(KeyStroke.getKeyStroke('='), "incSpeed");
 		inputMap.put(KeyStroke.getKeyStroke('-'), "decSpeed");
 		inputMap.put(KeyStroke.getKeyStroke('_'), "decSpeed");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "escape");
 		ActionMap actionMap = bitcity.getActionMap();
 		actionMap.put("incSpeed", actionIncSpeed);
 		actionMap.put("decSpeed", actionDecSpeed);
+		actionMap.put("escape", actionLeaveFullscreen);
 		
 		app.increaseSpeed = new JMenuItem("Faster");
 		app.decreaseSpeed = new JMenuItem("Slower");
