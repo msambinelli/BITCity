@@ -15,7 +15,7 @@ public class WorldMap extends JPanel implements Runnable {
 
 	public static boolean ambulanceAround = false;
 	public static int carCount = 0;
-	private static final int carLimit = 70;
+	private static final int carLimit = 100;
 	public static int FPS = 30;
 	
 	/* Color */
