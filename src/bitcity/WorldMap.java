@@ -15,7 +15,6 @@ public class WorldMap extends JPanel implements Runnable {
 
 	public static boolean ambulanceAround = false;
 	public static int carCount = 0;
-	private static final int carLimit = 100;
 	public static int FPS = 30;
 	
 	/* Color */
@@ -40,7 +39,7 @@ public class WorldMap extends JPanel implements Runnable {
 		while (true) {
 			try {
 				Thread.sleep((int)(1000./WorldMap.FPS));
-				if (WorldMap.carCount < WorldMap.carLimit && Math.random() < 0.15) {
+				if (WorldMap.carCount < this.world.carLimit && Math.random() < 0.15) {
 					/* Add a new car. */
 					for (int i = 0; i < 2; i++) {
 						startPos = this.world.getRandomStartPos();
@@ -52,7 +51,7 @@ public class WorldMap extends JPanel implements Runnable {
 							break;
 						}
 					}
-				} else if ((WorldMap.carCount >= WorldMap.carLimit - 5) && !WorldMap.ambulanceAround &&
+				} else if ((WorldMap.carCount >= this.world.carLimit - 5) && !WorldMap.ambulanceAround &&
 						Math.random() < 0.005) {
 					startPos = this.world.getRandomStartPos();
 					Ambulance.createCar(this.world, startPos).start();

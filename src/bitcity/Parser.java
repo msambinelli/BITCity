@@ -36,7 +36,7 @@ public class Parser {
 		char worldMap[][], curr;
 		int roadMap[][];
 		Point startPos[];
-		int rows, cols, startAmount, toSync;
+		int rows, cols, startAmount, toSync, carLimit;
 		int i, j;
 		ArrayList<TrafficLight> trafficLight = new ArrayList<TrafficLight>();
 		
@@ -45,6 +45,7 @@ public class Parser {
 			cols = input.nextInt();
 			startAmount = input.nextInt();
 			toSync = input.nextInt();
+			carLimit = input.nextInt();
 			input.nextLine();
 			
 			this.height_tiles = rows;
@@ -128,7 +129,7 @@ public class Parser {
 		/* Construct the road map now. */
 		buildRoadMap(worldMap, roadMap, startPos[0].x, startPos[0].y);
 		
-		return new World(worldMap, startPos, semaphores, roadMap, trafficLight);
+		return new World(worldMap, startPos, semaphores, roadMap, trafficLight, carLimit);
 	}
 	
 	

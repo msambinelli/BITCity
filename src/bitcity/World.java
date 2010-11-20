@@ -13,6 +13,7 @@ public class World {
 	private ArrayList<TrafficLight> trafficLight;
 	
 	private int worldSpeed = 1;
+	public int carLimit;
 	
 	final public static int ROAD = 1;
 	final public static int AMBULANCE = 16;
@@ -22,12 +23,13 @@ public class World {
 	final public static int CAR_HONKING = 8;
 	
 	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
-			int road[][], ArrayList<TrafficLight> t) {
+			int road[][], ArrayList<TrafficLight> t, int carLimit) {
 		this.world = world;
 		this.startPos = startPos;
 		this.semaphores = semaphores2;
 		this.road = road;
 		this.trafficLight = t;
+		this.carLimit = carLimit;
 	}
 	
 	public void setMapElement(int row, int col, char value) {
