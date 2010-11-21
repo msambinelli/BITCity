@@ -12,7 +12,7 @@ public abstract class MovingObject extends WorldObject {
 		this.direction = direction;
 	}
 	
-	abstract void draw(Graphics2D g);
+	abstract void draw(Graphics2D g, float tileWidth, float tileHeight);
 	abstract int moveRate();
 	
 	public Point getNextPos(char direction, Point pos) throws Exception {

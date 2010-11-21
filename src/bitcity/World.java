@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Iterator;
 
 public class World {
 	private char world[][];
@@ -11,6 +12,7 @@ public class World {
 	private HashMap<Character, Semaphore> semaphores;
 	private int road[][];
 	private ArrayList<TrafficLight> trafficLight;
+	private HashMap<Point, Tree> tree;
 	
 	private int worldSpeed = 1;
 	public int carLimit;
@@ -23,13 +25,20 @@ public class World {
 	final public static int CAR_HONKING = 8;
 	
 	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
-			int road[][], ArrayList<TrafficLight> t, int carLimit) {
+			int road[][], ArrayList<TrafficLight> t, ArrayList<Point> treelist, int carLimit) {
 		this.world = world;
 		this.startPos = startPos;
 		this.semaphores = semaphores2;
 		this.road = road;
 		this.trafficLight = t;
 		this.carLimit = carLimit;
+		
+		this.tree = new HashMap<Point, Tree>();
+		Iterator<Point> it = treelist.iterator();
+		while (it.hasNext()) {
+			Point pt = it.next();
+			this.tree.put(pt, new Tree(this, pt));
+		}
 	}
 	
 	public void setMapElement(int row, int col, char value) {
@@ -108,6 +117,19 @@ public class World {
 	public  ArrayList<TrafficLight> getTrafficLight() {
 		
 		return this.trafficLight;
+	}
+	
+	
+	public Tree getTree(int i, int j) {
+		try {
+			return this.tree.get(new Point(i, j));
+		} catch (NullPointerException e) {
+			return null;
+		}
+	}
+	
+	public Iterator<Tree> getTrees() {
+		return this.tree.values().iterator();
 	}
 	
 

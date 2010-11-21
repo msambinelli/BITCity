@@ -126,9 +126,7 @@ public class Car extends MovingObject {
 	}
 	
 	/* XXX Not used */
-	public void draw(Graphics2D g) {
-		g.setColor(Color.BLUE);
-		g.drawRect(this.pos.x, this.pos.y, 10, 10);
+	public void draw(Graphics2D g, float tileWidth, float tileHeight) {
 	}
 	
 	public void run() {

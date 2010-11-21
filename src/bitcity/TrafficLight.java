@@ -27,7 +27,7 @@ public class TrafficLight extends WorldObject {
 	}
 
 	/* XXX Not used */
-	public void draw(Graphics2D ctx) {
+	public void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
 		
 	}
 

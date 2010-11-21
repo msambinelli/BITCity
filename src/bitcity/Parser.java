@@ -16,6 +16,7 @@ public class Parser {
 	public static final char SENTINEL = '!';
 	public static final char SIDEWALK = '#';
 	public static final char GARAGE = '&';
+	public static final char TREE_ROOT = '.';
 	
 	public Parser(String filename) throws FileNotFoundException {
 		this.fileIn = new FileReader(filename);
@@ -39,6 +40,7 @@ public class Parser {
 		int rows, cols, startAmount, toSync, carLimit;
 		int i, j;
 		ArrayList<TrafficLight> trafficLight = new ArrayList<TrafficLight>();
+		ArrayList<Point> tree = new ArrayList<Point>();
 		
 		try {
 			rows = input.nextInt();
@@ -86,6 +88,10 @@ public class Parser {
 						}
 						startAmount--;
 						startPos[startAmount] = new Point(i, j);
+					} else if (curr == '.') {
+						/* Árvores */
+						if (Application.DEBUG) System.out.println("Tree at: " + i + ", " + j);
+						tree.add(new Point(i, j));
 					} else {
 						/* Semáforos */
 						if (((int)(curr) - (int)'A') >= 0 && ((int)(curr) - (int)'A') <= ((int)'Z' - (int)'A')) {
@@ -129,7 +135,7 @@ public class Parser {
 		/* Construct the road map now. */
 		buildRoadMap(worldMap, roadMap, startPos[0].x, startPos[0].y);
 		
-		return new World(worldMap, startPos, semaphores, roadMap, trafficLight, carLimit);
+		return new World(worldMap, startPos, semaphores, roadMap, trafficLight, tree, carLimit);
 	}
 	
 	

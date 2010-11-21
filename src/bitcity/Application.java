@@ -23,10 +23,12 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.util.Random;
 
 
 public class Application {
 
+	public static Random random = new Random();
 	private World world;
 	private JMenuItem increaseSpeed, decreaseSpeed, showWorldSpeed;
 	private JCheckBoxMenuItem fullscreen;
@@ -35,7 +37,7 @@ public class Application {
 	private Dimension currSize;
 	
 	/* Set DEBUG to true in order to print things to System.out */
-	public static final boolean DEBUG = true; 
+	public static final boolean DEBUG = false; 
 	
 	/**
 	 * @param args
@@ -66,6 +68,7 @@ public class Application {
 			return;
 		} catch (Exception e) {
 			System.err.println("Exception caught while parsing: " + e.getMessage());
+			e.printStackTrace();
 			return;
 		}
 		

@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.Iterator;
 
 public class WorldMap extends JPanel implements Runnable {
 
@@ -34,6 +35,15 @@ public class WorldMap extends JPanel implements Runnable {
 		
 		for (int i = 0; i < this.world.getTrafficLight().size(); i++){
 			this.world.getTrafficLight().get(i).start();
+		}
+		
+		try {
+			Iterator<Tree> it = this.world.getTrees();
+			while (it.hasNext()) {
+				it.next().start();
+			}
+		} catch (NullPointerException e) {
+			/* No trees in the world. */
 		}
 		
 		while (true) {
@@ -92,6 +102,14 @@ public class WorldMap extends JPanel implements Runnable {
 				} else if (elem == '$') {
 					/* Some kind of decoration. */
 					ctx.setColor(WorldMap.DECORATION_COLOR);
+				} else if (elem == Parser.TREE_ROOT) {
+					Tree tree = this.world.getTree(i, j);
+					if (tree != null)
+						tree.draw(ctx, stepw, steph);
+					else {
+						/* XXX Talvez reportar erro. */
+					}
+					continue;
 				} else if (this.world.getSemaphores().containsKey(elem)) {
 					/* Traffic light. */
 					ctx.setColor(WorldMap.ROAD_COLOR);
