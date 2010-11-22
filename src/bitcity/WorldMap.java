@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Iterator;
+import java.util.Random;
 
 public class WorldMap extends JPanel implements Runnable {
 
@@ -66,7 +67,7 @@ public class WorldMap extends JPanel implements Runnable {
 					startPos = this.world.getRandomStartPos();
 					Ambulance.createCar(this.world, startPos).start();
 				}
-				if (!world.getRain().isRaining() && Math.random() < 0.001) {
+				if (!world.getRain().isRaining() && Math.random() < 0.005) {
 					world.getRain().startRain(WorldMap.FPS);
 				}
 			} catch (InterruptedException e) {
@@ -169,8 +170,11 @@ public class WorldMap extends JPanel implements Runnable {
 		if (this.world.getRain().isRaining()){
 			Point[] drops = this.world.getRain().getDrops();
 			ctx.setColor(Color.CYAN);
+			Random generator = new Random();
+			float woffset = Math.abs(generator.nextInt()) % stepw;
+			float hoffset = Math.abs(generator.nextInt()) % steph;
 			for (i = 0; i < drops.length; i++){
-				ctx.fillOval((int)(drops[i].x * stepw), (int)(drops[i].y * steph), 2, 2);
+				ctx.fillOval((int)(drops[i].x * stepw + woffset), (int)(drops[i].y * steph + hoffset), 2, 2);
 			}
 		}
 	}
