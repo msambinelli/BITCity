@@ -66,6 +66,9 @@ public class WorldMap extends JPanel implements Runnable {
 					startPos = this.world.getRandomStartPos();
 					Ambulance.createCar(this.world, startPos).start();
 				}
+				if (!world.getRain().isRaining() && Math.random() < 0.001) {
+					world.getRain().startRain(WorldMap.FPS);
+				}
 			} catch (InterruptedException e) {
 				System.err.println(e.getMessage());
 				break;
@@ -160,6 +163,14 @@ public class WorldMap extends JPanel implements Runnable {
 					ctx.fillRect((int)(((j - 1) * stepw) + 1), (int)(((i - 1) * steph) + (steph/4.)), 
 							(int)(stepw - 2), (int)((steph - 1)/2.));
 				}
+			}
+		}
+		
+		if (this.world.getRain().isRaining()){
+			Point[] drops = this.world.getRain().getDrops();
+			ctx.setColor(Color.CYAN);
+			for (i = 0; i < drops.length; i++){
+				ctx.fillOval((int)(drops[i].x * stepw), (int)(drops[i].y * steph), 2, 2);
 			}
 		}
 	}

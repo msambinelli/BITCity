@@ -16,6 +16,7 @@ public class World {
 	
 	private int worldSpeed = 1;
 	public int carLimit;
+	private Rain rain;
 	
 	final public static int ROAD = 1;
 	final public static int AMBULANCE = 16;
@@ -32,6 +33,8 @@ public class World {
 		this.road = road;
 		this.trafficLight = t;
 		this.carLimit = carLimit;
+		
+		this.rain = new Rain(world[0].length, world.length);
 		
 		this.tree = new HashMap<Point, Tree>();
 		Iterator<Point> it = treelist.iterator();
@@ -149,5 +152,13 @@ public class World {
 		
 		this.setWorldSpeed(this.getWorldSpeed() + (increase ? 1 : -1));
 		WorldMap.FPS = 27 + this.getWorldSpeed() * 3;
+	}
+
+	public Rain getRain() {
+		return rain;
+	}
+
+	public void setRain(Rain rain) {
+		this.rain = rain;
 	}
 }
