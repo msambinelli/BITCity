@@ -13,12 +13,13 @@ public class Rain extends WorldObject {
 	private int time;
 	private int elapsed;
 	private World world;
+	private ArrayList<Drop> drops;
 
 	final private static double THUNDER_PROBABILITY = 1/3.; /* 1 in 3 raining frames. */
-	private static final float DROP_MAX_SIZE = 20; /* initial size of the drop */
-	private static final int RAIN_MAX_TIME = 20;
+	final private static float DROP_MAX_SIZE = 2; /* 2x tileWidth size of the drop */
+	final private static int RAIN_MAX_TIME = 20;
 	final private static int RAIN_MIN_TIME = 5;
-	private ArrayList<Drop> drops;
+	
 
 	public Rain(World world){
 		this.world = world;
@@ -119,7 +120,7 @@ public class Rain extends WorldObject {
 				if (drop_force == 0) {
 					drops.remove(i);
 				} else {
-					int size = (int) (Rain.DROP_MAX_SIZE * drop_force);
+					int size = (int) (Rain.DROP_MAX_SIZE * tileWidth * drop_force);
 					ctx.fillOval((int) (drops.get(i).getX()), (int) (drops.get(i).getY()), size, size);
 				}
 			}
