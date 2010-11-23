@@ -32,7 +32,7 @@ public class Tree extends WorldObject {
 			delay = (int)Math.round(Tree.GROW_DELAY / (this.world.getWorldSpeed() * 1.5));
 			try {
 				Thread.sleep(delay);
-				if (Math.random() < 0.3 && this.size <= this.maxSize) {
+				if (Math.random() < 0.3 && this.size <= this.maxSize && !this.world.getRain().isRaining()) {
 					index = Application.random.nextInt(this.maxSize - this.size + 1);
 					this.buildOrder[this.size - 1] = availableOrder[index] + 1;
 					temp = availableOrder[this.maxSize - this.size];
@@ -52,6 +52,15 @@ public class Tree extends WorldObject {
 		}
 	}
 	
+	public void maybeDropALeaf() {
+		if (Math.random() < 0.042) {
+			this.size--;
+			if (this.size == 0) {
+				this.size = 1;
+			}
+		}
+	}
+	
 	@Override
 	void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
 		int i = this.root.x, j = this.root.y;
@@ -67,7 +76,7 @@ public class Tree extends WorldObject {
 		
 		ctx.setColor(new Color((float)0.19, (float)0.80, (float)0.19));
 		
-		for (int x = 0; x < this.buildOrder.length; x++) {
+		for (int x = 0; x < this.size - 1; x++) {
 			switch (this.buildOrder[x]) {
 			case 13:
 				ctx.fillRect((int)((j - 1) * tileWidth - (tileWidth / 3.5)), 

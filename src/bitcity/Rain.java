@@ -3,16 +3,6 @@ package bitcity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.io.File;
-import java.io.IOException;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Rain extends WorldObject {
 	
@@ -24,8 +14,9 @@ public class Rain extends WorldObject {
 	private int elapsed;
 	private World world;
 
+	final private static double THUNDER_PROBABILITY = 1/3.; /* 1 in 3 raining frames. */
 	final private int lenghtMin = 4;
-	
+
 	public Rain(World world){
 		this.world = world;
 		this.width = this.world.columnCount();
@@ -42,8 +33,10 @@ public class Rain extends WorldObject {
 			rain_force = 1 - (float) (this.elapsed - meio ) / (this.time - meio);
 		}
 		
-		if (rain_force > 0.8 && Math.random() < 0.3){
-			Sound.THUNDER.play();
+		if (rain_force > 0.8 && Math.random() < Rain.THUNDER_PROBABILITY) {
+			if (!Sound.THUNDER.isRunning()) {
+				Sound.THUNDER.play();
+			}
 		}
 		
 		int size = (int) (dropMax * rain_force);
@@ -55,6 +48,7 @@ public class Rain extends WorldObject {
 			rain[i].x = Math.abs(Application.random.nextInt()) % this.width;
 			rain[i].y = Math.abs(Application.random.nextInt()) % this.height;
 		}
+		this.world.dropRandomLeavesFromTrees();
 		this.elapsed++;
 		if (this.elapsed == this.time){
 			Sound.RAIN.stop();
@@ -75,7 +69,9 @@ public class Rain extends WorldObject {
 						this.wait();
 					}
 					System.out.println("Starting to rain, slow down.");
-					/* XXX Update world speed to slow down things. */
+					/* Actually, slowing down the world seems to cause a weird visual effect.
+					 * Just take the message above as a warning.
+					 */
 					
 					frameRate = WorldMap.FPS;
 					this.elapsed = 0;

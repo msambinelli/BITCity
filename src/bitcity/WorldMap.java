@@ -66,7 +66,7 @@ public class WorldMap extends JPanel implements Runnable {
 					startPos = this.world.getRandomStartPos();
 					Ambulance.createCar(this.world, startPos).start();
 				}
-				if (!world.getRain().isRaining() && Math.random() < 0.005) {
+				if (!world.getRain().isRaining() && Math.random() < World.RAIN_PROBABILITY) {
 					synchronized (world.getRain()) {
 						world.getRain().notify();
 					}

@@ -24,7 +24,9 @@ public class World {
 	final public static int CAR_RUNNING = 5;
 	final public static int CAR_STOPPED = 6;
 	final public static int CAR_HONKING = 8;
-	
+
+	final public static double RAIN_PROBABILITY = 1/1000.; /* 1 in 1000 frames. */
+
 	public World(char world[][], Point startPos[], HashMap<Character, Semaphore> semaphores2, 
 			int road[][], ArrayList<TrafficLight> t, ArrayList<Point> treelist, int carLimit) {
 		this.world = world;
@@ -132,8 +134,21 @@ public class World {
 		}
 	}
 	
-	public Iterator<Tree> getTrees() {
+	public Iterator<Tree> getTrees() throws NullPointerException {
 		return this.tree.values().iterator();
+	}
+	
+	public void dropRandomLeavesFromTrees() {
+		Iterator<Tree> it;
+		try {
+			it = this.getTrees();
+		} catch (NullPointerException e) {
+			/* No trees in this world, fine :/ */
+			return;
+		}
+		while (it.hasNext()) {
+			it.next().maybeDropALeaf();
+		}
 	}
 	
 

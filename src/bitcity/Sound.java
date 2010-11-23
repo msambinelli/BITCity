@@ -51,6 +51,10 @@ public enum Sound {
 		this.clip.loop(Clip.LOOP_CONTINUOUSLY);
 	}
 	
+	public boolean isRunning() {
+		return this.clip.isRunning();
+	}
+	
 	public void stop() {
 		this.clip.stop();
 	}
