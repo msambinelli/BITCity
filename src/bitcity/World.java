@@ -34,7 +34,8 @@ public class World {
 		this.trafficLight = t;
 		this.carLimit = carLimit;
 		
-		this.rain = new Rain(world[0].length, world.length);
+		this.rain = new Rain(this);
+		this.rain.start();
 		
 		this.tree = new HashMap<Point, Tree>();
 		Iterator<Point> it = treelist.iterator();

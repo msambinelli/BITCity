@@ -1,9 +1,10 @@
 package bitcity;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -13,26 +14,26 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class Rain {
+public class Rain extends WorldObject {
 	
 	private boolean raining = false;
-	private int drop_max;
+	private int dropMax;
 	private int width;
 	private int height;
 	private int time;
 	private int elapsed;
+	private World world;
 
-	final private int lenght_min = 4;
+	final private int lenghtMin = 4;
 	
-	public Rain(int width, int height){
-		this.drop_max = (int) (width * height / 2);
-		this.width = width;
-		this.height = height;
+	public Rain(World world){
+		this.world = world;
+		this.width = this.world.columnCount();
+		this.height = this.world.rowCount();
+		this.dropMax = (int) (width * height / 2);
 	}
 	
 	public Point[] getDrops(){
-		//int size = (int) (Math.random() * drop_max);
-		
 		int meio = (int) (this.time / 2);
 		float rain_force;
 		if (this.elapsed <= meio){
@@ -42,34 +43,54 @@ public class Rain {
 		}
 		
 		if (rain_force > 0.8 && Math.random() < 0.3){
-			//this.thunder();
+			Sound.THUNDER.play();
 		}
 		
-		int size = (int) (drop_max * rain_force);
+		int size = (int) (dropMax * rain_force);
 		Point[] rain = new Point[size];
 		
 		//System.out.println("ela: " + this.elapsed + " time: " + this.time + "force " + rain_force);
-		Random generator = new Random();
 		for (int i = 0; i < size; i++){
 			rain[i] = new Point();
-			rain[i].x = Math.abs(generator.nextInt()) % this.width;
-			rain[i].y = Math.abs(generator.nextInt()) % this.height;
+			rain[i].x = Math.abs(Application.random.nextInt()) % this.width;
+			rain[i].y = Math.abs(Application.random.nextInt()) % this.height;
 		}
 		this.elapsed++;
 		if (this.elapsed == this.time){
+			Sound.RAIN.stop();
 			this.raining = false;
-			//Sound.RAIN.stop();
 		}
 		return rain;
 	}
 	
-	public void startRain(int frame_rate){
-		this.elapsed = 0;
-		Random generator = new Random();
-		this.time = this.lenght_min + (Math.abs(generator.nextInt()) % 16);
-		this.time *= frame_rate;
-		this.raining = true;
-		//Sound.RAIN.loop();
+	
+	
+	public void run() {
+		int frameRate;
+		
+		try {
+			while (true) {
+				try {
+					synchronized (this) {
+						this.wait();
+					}
+					System.out.println("Starting to rain, slow down.");
+					/* XXX Update world speed to slow down things. */
+					
+					frameRate = WorldMap.FPS;
+					this.elapsed = 0;
+					this.time = this.lenghtMin + (Math.abs(Application.random.nextInt()) % 16);
+					this.time *= frameRate;
+					this.raining = true;
+					Sound.RAIN.loop();
+				} catch (InterruptedException e) {
+					System.out.println("Rain exception: " + e.getMessage());
+					break;
+				}
+			}
+		} finally {
+			System.out.println("Rain is leaving this world..");
+		}
 	}
 
 	public boolean isRaining() {
@@ -80,60 +101,17 @@ public class Rain {
 		this.raining = raining;
 	}
 	
-	private void thunder(){
-		
-		new Thread(new Runnable() {
-			
-			public void run(){
-				File soundFile;
-		
-				soundFile = new File("data/thunder.wav");
-		
-		
-				AudioInputStream audioInputStream = null;
-				try { 
-					audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-				} catch (UnsupportedAudioFileException e1) { 
-					e1.printStackTrace();
-					return;
-				} catch (IOException e1) { 
-					e1.printStackTrace();
-					return;
-				} 
-		
-				AudioFormat format = audioInputStream.getFormat();
-				SourceDataLine auline = null;
-				DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
-		
-				try { 
-					auline = (SourceDataLine) AudioSystem.getLine(info);
-					auline.open(format);
-				} catch (LineUnavailableException e) { 
-					e.printStackTrace();
-					return;
-				} catch (Exception e) { 
-					e.printStackTrace();
-					return;
-				} 
-		
-				auline.start();
-				int nBytesRead = 0;
-				byte[] abData = new byte[524288]; // 128Kb 
-		
-				try { 
-					while (nBytesRead != -1) { 
-						nBytesRead = audioInputStream.read(abData, 0, abData.length);
-						if (nBytesRead >= 0) 
-							auline.write(abData, 0, nBytesRead);
-					} 
-				} catch (IOException e) { 
-					e.printStackTrace();
-					return;
-				} finally { 
-					auline.drain();
-					auline.close();
-				}
+	@Override
+	void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
+		if (this.isRaining()) {
+			Point[] drops = this.getDrops();
+			ctx.setColor(Color.CYAN);
+			float woffset = Math.abs(Application.random.nextInt()) % tileWidth;
+			float hoffset = Math.abs(Application.random.nextInt()) % tileHeight;
+			for (int i = 0; i < drops.length; i++){
+				ctx.fillOval((int)(drops[i].x * tileWidth + woffset), 
+						(int)(drops[i].y * tileHeight + hoffset), 2, 2);
 			}
-		}).start();
+		}
 	}
 }
