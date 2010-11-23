@@ -2,7 +2,7 @@ package bitcity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
+import java.util.ArrayList;
 
 public class Rain extends WorldObject {
 	
@@ -15,26 +15,30 @@ public class Rain extends WorldObject {
 	private World world;
 
 	final private static double THUNDER_PROBABILITY = 1/3.; /* 1 in 3 raining frames. */
-	final private int lenghtMin = 4;
-	private Point[] drops;
-	private float woffset;
-	private float hoffset;
+	private static final float DROP_MAX_SIZE = 20; /* initial size of the drop */
+	private static final int RAIN_MAX_TIME = 20;
+	final private static int RAIN_MIN_TIME = 5;
+	private ArrayList<Drop> drops;
 
 	public Rain(World world){
 		this.world = world;
 		this.width = this.world.columnCount();
 		this.height = this.world.rowCount();
-		this.dropMax = (int) (width * height / 2);
+		this.dropMax = 33;
+		this.drops = new ArrayList<Drop>();
 	}
 	
-	public Point[] getDrops(){
+	public void updateRain(float tileWidht, float tileHeight){
+		
 		int meio = (int) (this.time / 2);
+		
 		float rain_force;
-		if (this.elapsed <= meio){
+		
+		if (this.elapsed <= meio)
 			rain_force = (float) (this.elapsed) / meio;
-		} else {
+		else
 			rain_force = 1 - (float) (this.elapsed - meio ) / (this.time - meio);
-		}
+		
 		
 		if (rain_force > 0.8 && Math.random() < Rain.THUNDER_PROBABILITY) {
 			if (!Sound.THUNDER.isRunning()) {
@@ -42,25 +46,25 @@ public class Rain extends WorldObject {
 			}
 		}
 		
-		int size = (int) (dropMax * rain_force);
-		Point[] rain = new Point[size];
+		int nDrops = (int) (dropMax * rain_force);
 		
-		//System.out.println("ela: " + this.elapsed + " time: " + this.time + "force " + rain_force);
-		for (int i = 0; i < size; i++){
-			rain[i] = new Point();
-			rain[i].x = Math.abs(Application.random.nextInt()) % this.width;
-			rain[i].y = Math.abs(Application.random.nextInt()) % this.height;
+		int width = (int) (tileWidht * this.width);
+		int heigth = (int) (tileHeight * this.height);
+		
+		for (int i = 0; i < nDrops; i++) {
+			int x = (int) Math.abs(Application.random.nextInt() % width);
+			int y = (int) Math.abs(Application.random.nextInt() % heigth);
+			this.drops.add(new Drop(x, y, this.elapsed));
 		}
+		
 		this.world.dropRandomLeavesFromTrees();
 
 		if (this.elapsed == this.time){
 			Sound.RAIN.stop();
 			this.raining = false;
+			this.drops.clear();
 		}
-		return rain;
 	}
-	
-	
 	
 	public void run() {
 		int frameRate;
@@ -78,10 +82,12 @@ public class Rain extends WorldObject {
 					
 					frameRate = WorldMap.FPS;
 					this.elapsed = 0;
-					this.time = this.lenghtMin + (Math.abs(Application.random.nextInt()) % 16);
+					int gap = RAIN_MAX_TIME - Rain.RAIN_MIN_TIME + 1;
+					this.time = Rain.RAIN_MIN_TIME + (Math.abs(Application.random.nextInt()) % gap);
 					this.time *= frameRate;
 					this.raining = true;
 					Sound.RAIN.loop();
+					
 				} catch (InterruptedException e) {
 					System.out.println("Rain exception: " + e.getMessage());
 					break;
@@ -102,19 +108,20 @@ public class Rain extends WorldObject {
 	
 	@Override
 	void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
-		if (this.isRaining()) {
-			if (this.elapsed % WorldMap.FPS == 0){
-				this.drops = this.getDrops();
-				this.woffset = Math.abs(Application.random.nextInt()) % tileWidth;
-				this.hoffset = Math.abs(Application.random.nextInt()) % tileHeight;
-			}
-			this.elapsed++;
-			ctx.setColor(Color.CYAN);
 
-			for (int i = 0; i < drops.length; i++){
-				System.out.println(10 * ((this.elapsed % 30) / 30));
-				ctx.fillOval((int)(drops[i].x * tileWidth + woffset),
-						(int)(drops[i].y * tileHeight + hoffset), (int) (10 * (1 - (this.elapsed % 30.0) / 30.0)) , (int) (10 * (1 - (this.elapsed % 30.0)/30.0)));
+		if (this.isRaining()) {
+	
+			this.elapsed++;
+		    this.updateRain(tileWidth, tileHeight);	
+		    ctx.setColor(Color.CYAN);
+			for (int i = 0; i < drops.size(); i++){
+				float drop_force = drops.get(i).getForce(this.elapsed);
+				if (drop_force == 0) {
+					drops.remove(i);
+				} else {
+					int size = (int) (Rain.DROP_MAX_SIZE * drop_force);
+					ctx.fillOval((int) (drops.get(i).getX()), (int) (drops.get(i).getY()), size, size);
+				}
 			}
 		}
 	}
