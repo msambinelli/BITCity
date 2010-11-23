@@ -16,6 +16,9 @@ public class Rain extends WorldObject {
 
 	final private static double THUNDER_PROBABILITY = 1/3.; /* 1 in 3 raining frames. */
 	final private int lenghtMin = 4;
+	private Point[] drops;
+	private float woffset;
+	private float hoffset;
 
 	public Rain(World world){
 		this.world = world;
@@ -49,7 +52,7 @@ public class Rain extends WorldObject {
 			rain[i].y = Math.abs(Application.random.nextInt()) % this.height;
 		}
 		this.world.dropRandomLeavesFromTrees();
-		this.elapsed++;
+
 		if (this.elapsed == this.time){
 			Sound.RAIN.stop();
 			this.raining = false;
@@ -100,13 +103,18 @@ public class Rain extends WorldObject {
 	@Override
 	void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
 		if (this.isRaining()) {
-			Point[] drops = this.getDrops();
+			if (this.elapsed % WorldMap.FPS == 0){
+				this.drops = this.getDrops();
+				this.woffset = Math.abs(Application.random.nextInt()) % tileWidth;
+				this.hoffset = Math.abs(Application.random.nextInt()) % tileHeight;
+			}
+			this.elapsed++;
 			ctx.setColor(Color.CYAN);
-			float woffset = Math.abs(Application.random.nextInt()) % tileWidth;
-			float hoffset = Math.abs(Application.random.nextInt()) % tileHeight;
+
 			for (int i = 0; i < drops.length; i++){
-				ctx.fillOval((int)(drops[i].x * tileWidth + woffset), 
-						(int)(drops[i].y * tileHeight + hoffset), 2, 2);
+				System.out.println(10 * ((this.elapsed % 30) / 30));
+				ctx.fillOval((int)(drops[i].x * tileWidth + woffset),
+						(int)(drops[i].y * tileHeight + hoffset), (int) (10 * (1 - (this.elapsed % 30.0) / 30.0)) , (int) (10 * (1 - (this.elapsed % 30.0)/30.0)));
 			}
 		}
 	}
