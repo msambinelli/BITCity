@@ -1,4 +1,4 @@
-\charpter{Concorrência}
+\charpter{Concorrência e Exceções}
 
 Em alguns sistemas computacionais, processos que trabalham juntos podem compartilhar algum 
 serviço em comum. Com efeito, a gestão da concorrência entre processos é a fonte de inúmeras 
@@ -13,19 +13,22 @@ um recurso que já estiver em uso por um processo.
 Para realizar exclusão mútua de modo que, enquanto um processo estiver ocupado utilizando um 
 recurso, nenhum outro processo cause problemas. Temos as seguintes alternativas:
 
+Quando um programa não é executado de forma esperada é necessário informar o que está acontecendo ao desenvolvedor. Algumas vezes o programa pode parar de executar por conta desses erros e o desenvolvedor não tem ideia do que está acontecendo. E o pior de tudo isso, é que às vezes o programa para por conta de uma simples divisão por zero vinda do usuário. Então devemos cria exceções, que é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o fluxo normal de execução da aplicação.
 
-\section{Condição de Disputa}
+\section{Concorrência}
+
+\subsection{Condição de Disputa}
 
 Quando dois processos trabalham juntos, eles podem compartilhar algum recurso em comum. Uma condição de disputa ocorre quando dois ou mais processos necessitam efetuar operações em uma mesma área de memória, mas os resultados destas operações dependem da ordem em que essas operações são executadas.
 
-\section{Seção Críticas}
+\subsection{Seção Críticas}
 
 Durante uma parte do tempo, um processo está ocupado fazendo computações internas e outras coisas que não acarretam
 em condições de disputa. Contudo, algumas vezes, um processo precisa ter acesso à memória compartilhada ou a recursos compartilhados ou tem que fazer outras coisas críticas que podem ocasionar disputas. Aquela parte do programa
 em que há acesso à memória compartilhada é chamado de seção crítica.
 
 
-\section{Lock}
+\subsection{Lock}
 
 Lock é uma solução de software para tentar impedir que dois processos acessem um recurso 
 simultaneamente. Considere que haja uma única variável compartilhada (lock), inicialmente 
@@ -37,7 +40,8 @@ está utilizando o recurso e um 1 indica que algum processo está utilizando o r
 
 
 \section{Lock reentrante}
-….
+
+Lock reentrante é um lock que pode ser readquirido pela thread que o possui sem causar deadlock com ela mesma.
 
 \section{Spin}
 
