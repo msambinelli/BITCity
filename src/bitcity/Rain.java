@@ -2,6 +2,7 @@ package bitcity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.ArrayList;
 
 public class Rain extends WorldObject {
@@ -16,9 +17,10 @@ public class Rain extends WorldObject {
 	private ArrayList<Drop> drops;
 
 	final private static double THUNDER_PROBABILITY = 1/3.; /* 1 in 3 raining frames. */
-	final private static float DROP_MAX_SIZE = 2; /* 2x tileWidth size of the drop */
+	final private static float DROP_MAX_SIZE = (float) 1.6; /* 1.6 tileWidth size of the drop */
 	final private static int RAIN_MAX_TIME = 20;
 	final private static int RAIN_MIN_TIME = 5;
+	final private static Color TRANSP_CYAN = new Color((float)0, (float)1, (float)1, (float)0.5);
 	
 
 	public Rain(World world){
@@ -111,10 +113,12 @@ public class Rain extends WorldObject {
 	void draw(Graphics2D ctx, float tileWidth, float tileHeight) {
 
 		if (this.isRaining()) {
-	
+			ctx.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON));
+			
 			this.elapsed++;
 		    this.updateRain(tileWidth, tileHeight);	
-		    ctx.setColor(Color.CYAN);
+		    ctx.setColor(Rain.TRANSP_CYAN);
 			for (int i = 0; i < drops.size(); i++){
 				float drop_force = drops.get(i).getForce(this.elapsed);
 				if (drop_force == 0) {
