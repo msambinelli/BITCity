@@ -39,11 +39,11 @@ simplesmente aguardará até que ela se torne 0. Assim, um 0 significa que nenhu
 está utilizando o recurso e um 1 indica que algum processo está utilizando o recurso. 
 
 
-\section{Lock reentrante}
+\subsection{Lock reentrante}
 
 Lock reentrante é um lock que pode ser readquirido pela thread que o possui sem causar deadlock com ela mesma.
 
-\section{Spin}
+\subsection{Spin}
 
 Spin locks são um tipo especial de lock projetados para trabalhar em um ambiente 
 multiprocessador. Se um processo encontra o spin lock aberto, ele adquiri o lock e entra. 
@@ -51,11 +51,11 @@ Caso contrário ele fica dando voltas, mesmo que ele não tenha nada pra fazer. 
 pois a maioria dos recursos ficam trancadas por milisegundos apenas. Seria pior soltar a 
 CPU e readiquiri-la mais tarde.
 
-\section{Block}
+\subsection{Block}
 ….
 
 
-\section{Semáforos}
+\subsection{Semáforos}
 
 Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de vezes que o 
 processo foi acordado. De acordo com a proposta dele, foi introduzido um novo tipo de 
@@ -77,7 +77,7 @@ seria escolhido pelo sistema (por exemplo, aleatoriamente) e seria dada a permis
 terminar seu down. Portanto, depois de um up em um semáforo com processos dormindo nele, 
 o semáforo permanecerá 0, mas haverá um processo a menor dormindo nele.
 
-\section{Monitor}
+\subsection{Monitor}
 
 Para facilitar a escrita correta de programas, Hoare e Brinch Hansen propuseram uma unidade 
 básica de sincronização de alto nível chamada monitor.  Um monitor é uma coleção de procedimentos, 
@@ -92,7 +92,7 @@ primeira instruções do procedimento verificarão  se qualquer outro processo e
 dentro do monitor. Se estiver, o processo que chamou será suspenso até que o outro processo deixe o 
 monitor. Se nenhum outro processo estiver usando o monitor, o processo que chamou poderá entrar.
 
-\section{Deadlock}
+\subsection{Deadlock}
 
 Um conjunto de processos estará em situação de deadlock se todo processo pertencente ao conjunto 
 estiver esperando por um evento que somente um outro processo desse mesmo conjunto poderá fazer 
@@ -124,7 +124,7 @@ Em geral, quatro estratégias são usadas para tratar deadlocks:
 \item Prevenção, negando estruturalmente algumas das condições necessárias para gerar um deadlock.
 \end{itemize}
 
-\section{Livelock}
+\subsection{Livelock}
 
 Um Livelock é semelhante a um Deadlock, com exceção dos estados dos processos envolvidos na 
 Livelock mudam constantemente em relação um ao outro, nenhum progresso Livelock é um caso 
@@ -135,7 +135,7 @@ estreito, e cada um tenta ser educada, movendo de lado para  dar passagem a outr
 mas eles acabam movendo de um lado para o outro sem fazer nenhum progresso porque ambos 
 repetidamente movem na mesma direção e ao mesmo tempo.
 
-\section{Inversão de Prioridade}
+\subsection{Inversão de Prioridade}
 
 Considere um computador com dois processos: H, com alta prioridade, e L, com baixa prioridade. 
 As regras de escalonamento são tais que H é executado sempre que estiver no estado pronto. 
@@ -144,7 +144,7 @@ uma espera ociosa, mas, como L nunca é escalonado enquanto H está executando, 
 oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação 
 é referida como problema da inversão de prioridade.
 
-\section{Memória Transacional}
+\subsection{Memória Transacional}
 
 Memória Transacional atraiu grande interesse por eliminar muitos dos 
 problemas associados ao uso de locks e ainda assim conseguir um ganho em desempenho.
@@ -167,7 +167,7 @@ que estejam, as modificações realizadas na transações o efetivadas, tornando
 Caso contrário, o registro permite que quaisquer mudanças sejam desfeitas, abortando a transação.
 
 
-\charpter{Exceções}
+\section{Exceções}
 
 Uma exceção é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o 
 fluxo normal de execução da aplicação. Exceções ocorrem durante a execução de aplicativos, como 
