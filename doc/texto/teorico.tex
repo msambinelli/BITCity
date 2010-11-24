@@ -1,11 +1,90 @@
-\chapter{Concorrência}
+\charpter{Concorrência}
 
-2 páginas pelo menos
+Em alguns sistemas computacionais, processos que trabalham juntos podem compartilhar algum serviço em comum. Com efeito, a gestão da concorrência entre processos é a fonte de inúmeras dificuldades no desenvolvimento de software; o acesso descoordenado a um recurso (a chamada condição de corrida) induz no sistema um comportamento imprevisível.
 
-Lock; Lock reentrante; Spin; Block; Semáforos; Monitor;
-Sincronização (Coarse-Grained e Fine-Grained); Livelock; Deadlock;
-Inversão de prioridade; Convoying; Seção crítica; Memória transacional
+Para evitar esse problema de recursos compartilhados devemos encontrar algum modo de impedir que mais de um processo utilize ao mesmo tempo estes recursos. Em outras palavras, precisamos de exclusão mútua, isto é, algum modo de assegurar que outros processos seja impedidos de usar um recurso que já estiver em uso por um processo.
 
-\chapter{Exceções}
+Para realizar exclusão mútua de modo que, enquanto um processo estiver ocupado utilizando um recurso, nenhum outro processo cause problemas. Temos as seguintes alternativas:
 
-1,5 a 2 páginas pelo menos
+\section{Lock}
+
+Lock é uma solução de software para tentar impedir que dois processos acessem um recurso simultaneamente. Considere que haja uma única variável compartilhada (lock), inicialmente contendo o valor 0. Para entrar em sua região crítica, um processo testa antes se há impedimento, verificando o valor da variável lock. Se lock for 0, o processo altera essa variável para 1 e entra na região crítica. Se lock já estiver com o valor 1, o processo simplesmente aguardará até que ela se torne 0. Assim, um 0 significa que nenhum processo está utilizando o recurso e um 1 indica que algum processo está utilizando o recurso. 
+
+
+\section{Lock reentrante}
+….
+
+\section{Spin}
+
+Spin locks são um tipo especial de lock projetados para trabalhar em um ambiente multiprocessador. Se um processo encontra o spin lock aberto, ele adquiri o lock e entra. Caso contrário ele fica dando voltas, mesmo que ele não tenha nada pra fazer. Isso é bom pois a maioria dos recursos ficam trancadas por milisegundos apenas. Seria pior soltar a CPU e readiquiri-la mais tarde.
+
+\section{Block}
+….
+
+
+\section{Semáforos}
+
+Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de vezes que o processo foi acordado. De acordo com a proposta dele, foi introduzido um novo tipo de variável chamado semáforo. Um semáforo poderia conter o valor 0 – indicando que nenhum sinal de acordar foi salvo – ou algum valor positivo se um ou mais sinais de acordar estivessem pendentes.
+
+Dijkstra propôs a existência de duas operações,  douw e up. A operação down sobre um semáforo verifica se seu valor é maior que 0. Se for, o decrescerá de um e prosseguirá. Se o valor for 0, o processo será posto para dormir, sem terminar o down. Garante-se que, uma vez iniciada uma operação de semáforo, nenhum outro processo pode ter acesso ao semáforo até que a operação tenha terminado ou sido bloqueada. Essa atomicidade é absolutamente essencial para resolver os problemas de sincronização e evitar condições de disputa.
+A operação up incrementa o valor de um dado semáforo. Se um ou mais processos estivessem dormindo naquele semáforo, incapacitados de terminar uma operação down anterior, um deles seria escolhido pelo sistema (por exemplo, aleatoriamente) e seria dada a permissão para terminar seu down. Portanto, depois de um up em um semáforo com processos dormindo nele, o semáforo permanecerá 0, mas haverá um processo a menor dormindo nele.
+
+\section{Monitor}
+
+Para facilitar a escrita correta de programas, Hoare e Brinch Hansen propuseram uma unidade básica de sincronização de alto nível chamada monitor.  Um monitor é uma coleção de procedimentos, variáveis e estruturas de dados, tudo isso agrupado em um tipo especial de módulo. Os processos podem chamar os procedimentos de um monitor quando quiserem, mas não podem ter acesso direto às estruturas internas de dados ao monitor a partir de procedimentos declarados fora do monitor.
+
+Os monitores apresentam uma propriedade importante que os torna úteis para realizar a exclusão mútua: somente um processo pode estar ativo em um monitor em um dado momento. O monitor é uma construção da linguagem de programação. Em geral, quando um processo chama um procedimento do monitor, algumas das primeira instruções do procedimento verificarão  se qualquer outro processo está atualmente ativo dentro do monitor. Se estiver, o processo que chamou será suspenso até que o outro processo deixe o monitor. Se nenhum outro processo estiver usando o monitor, o processo que chamou poderá entrar.
+
+\section{Deadlock}
+
+Um conjunto de processos estará em situação de deadlock se todo processo pertencente ao conjunto estiver esperando por um evento que somente um outro processo desse mesmo conjunto poderá fazer acontecer. Como todos os processo estarão esperando, nenhum deles desencadeará qualquer um dos eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre.
+
+Em geral, quatro estratégias são usadas para tratar deadlocks:
+
+Ignorar por completo o problema.
+Detecção e recuperação. Deixar os deadlocks ocorrer, detectá-los e agir.
+Anulação dinâmica por meio de uma alocação cuidadosa de recursos.
+Prevenção, negando estruturalmente algumas das condições necessárias para gerar um deadlock.
+
+\section{Livelock}
+
+Um Livelock é semelhante a um Deadlock, com exceção dos estados dos processos envolvidos na Livelock mudam constantemente em relação um ao outro, nenhum progresso Livelock é um caso especial de esgotamento de recursos.
+
+Um exemplo do mundo real de Livelock ocorre quando duas pessoas se encontram em um corredor estreito, e cada um tenta ser educada, movendo de lado para  dar passagem a outra pessoa, mas eles acabam movendo de um lado para o outro sem fazer nenhum progresso porque ambos repetidamente movem na mesma direção e ao mesmo tempo.
+
+\section{Inversão de Prioridade}
+
+Considere um computador com dois processos: H, com alta prioridade, e L, com baixa prioridade. As regras de escalonamento são tais que H é executado sempre que estiver no estado pronto. Em certo momento, com L em sua região crítica, H torna-se pronto para executar. Agora H inicia uma espera ociosa, mas, como L nunca é escalonado enquanto H está executando, L nunca tem a oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação é referida como problema da inversão de prioridade.
+
+\section{Memória Transacional}
+
+Memória Transacional atraiu
+ grande interesse por eliminar muitos dos problemas associados ao uso de locks
+ e ainda assim conseguir um ganho em desempenho.
+
+
+Como exemplo, considere diversas tarefas que operam simultaneamente em uma mesma regiões de memória, realizando escritas e leituras. Uma modificação no estado feita por uma tarefa que e lida por outra pode denotar um estado inconsistente, se a modificação foi realizada durante a operação da segunda tarefa.
+
+Uma transação seria uma sequencia de operações de leitura e escrita em memória compartilhada realizada por uma tarefa de forma otimista, isto e, assumindo que os estados intermediários não foram alterados
+ concorrentemente por outras tarefas.
+
+
+As operações realizadas nas transações entretanto são registradas, e logo antes do fim das transações e verificado se o estado lido está consistente, baseado nos registros; supondo que estejam, as modificações realizadas na transações o efetivadas, tornando-se permanentes. Caso contrário, o registro permite que quaisquer mudanças sejam desfeitas, abortando a transação.
+
+
+\charpter{Exceções}
+
+Uma exceção é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o fluxo normal de execução da aplicação. Exceções ocorrem durante a execução de aplicativos, como por exemplo divisões por zero, acesso a posições inválidas (em listas ou arrays).
+
+
+Erros são comuns em tempo de execução e as aplicações devem estar preparadas para tratá-los sem abortar o programa e perder os dados dos usuários. Erros são comuns em tempo de execução, as aplicações devem estar preparadas para tratá-los sem abortar o programa e perder os dados dos usuários. O conceito de tratamento de exceções permite ao programador ``lidar'' com o problema (tratando-o) e permitindo ao programa continuar sua execução.
+
+As vantagens no uso de exceções são: 
+
+\begin{itemize}
+\item Separação do código regular (fluxo normal) do código de tratamento de exceções
+\item Agrupamento e diferenciação de erros (e seus respectivos tratamentos)
+\item Obrigatoriedade de tratamento (exceções não podem ser ignoradas)
+\end{itemize}
+
+
