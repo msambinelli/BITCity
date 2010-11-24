@@ -83,6 +83,22 @@ estiver esperando por um evento que somente um outro processo desse mesmo conjun
 acontecer. Como todos os processo estarão esperando, nenhum deles desencadeará qualquer um dos 
 eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre.
 
+Para que ocorra um Deadlock, deve ter quatro condições satisfeitas:
+
+\begin{itemize}
+\item Condição de exclusão mútua. Em um determinado instante, cada recurso está em uma de duas situações:
+ou associado a um único processo ou disponível.
+\item Condição de posse e espera. Processos que, em um determinado instante, retêm recursos concedidos
+anteriormente podem requisitar novos recursos.
+\item Condição de não preempção. Recursos concedidos previamente a um processo não podem ser 
+forçosamente tomados desse processo - eles deve ser explicitamente liberados pelo processo que os retém.
+\item Condição de espera circular. Deve existir um encadeamento circular de dois ou mais processos; cada um
+deles encontra-se à espera de um recurso que está sendo usado pelo membro seguinte dessa cadeia.
+\end{itemize}
+
+Todas essas quatro condições deve estar presentes para que um deadlock ocorra. Se faltar
+uma delas, não ocorrerá deadlock.
+
 Em geral, quatro estratégias são usadas para tratar deadlocks:
 
 \begin{itemize}
