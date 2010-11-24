@@ -13,6 +13,18 @@ um recurso que já estiver em uso por um processo.
 Para realizar exclusão mútua de modo que, enquanto um processo estiver ocupado utilizando um 
 recurso, nenhum outro processo cause problemas. Temos as seguintes alternativas:
 
+
+\section{Condição de Disputa}
+
+Quando dois processos trabalham juntos, eles podem compartilhar algum recurso em comum. Uma condição de disputa ocorre quando dois ou mais processos necessitam efetuar operações em uma mesma área de memória, mas os resultados destas operações dependem da ordem em que essas operações são executadas.
+
+\section{Seção Críticas}
+
+Durante uma parte do tempo, um processo está ocupado fazendo computações internas e outras coisas que não acarretam
+em condições de disputa. Contudo, algumas vezes, um processo precisa ter acesso à memória compartilhada ou a recursos compartilhados ou tem que fazer outras coisas críticas que podem ocasionar disputas. Aquela parte do programa
+em que há acesso à memória compartilhada é chamado de seção crítica.
+
+
 \section{Lock}
 
 Lock é uma solução de software para tentar impedir que dois processos acessem um recurso 
@@ -130,9 +142,8 @@ oportunidade de deixar sua região crítica e, assim, H fica em um laço infinit
 
 \section{Memória Transacional}
 
-Memória Transacional atraiu
- grande interesse por eliminar muitos dos problemas associados ao uso de locks
- e ainda assim conseguir um ganho em desempenho.
+Memória Transacional atraiu grande interesse por eliminar muitos dos 
+problemas associados ao uso de locks e ainda assim conseguir um ganho em desempenho.
 
 
 Como exemplo, considere diversas tarefas que operam simultaneamente em uma mesma regiões 
