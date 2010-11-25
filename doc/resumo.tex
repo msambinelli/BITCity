@@ -5,15 +5,21 @@
 \end{center}
 }
 
-Concorrência é quando duas ou mais unidades são executadas em
+Concorrência ocorre quando duas ou mais unidades são executadas em
 simultâneo. Como estas unidades podem compartilhar os mesmo recursos, isto
-pode acarretar em alguns problemas: condição de corrida e deadlock. Assim,
-para evitar estes problemas, se torna necessário encontrar uma forma
-de sincronizar as unidades, consequentemente mantendo consistência nas
-informações utilizadas.  Erros são comuns em tempo de execução e as
+pode acarretar em problemas como condição de corrida e deadlock.
+Para evitar estes problemas, torna-se necessário encontrar uma forma
+de sincronizar as unidades, mantendo a consistência nas
+informações utilizadas. Erros são comuns em tempo de execução e as
 aplicações devem estar preparadas para lidar com eles.  Com o uso de
-exceções, podemos interromper o fluxo normal do programa quando ocorrer
-uma exceção e, assim, podemos trata-la.
+exceções, pode-se interromper o fluxo normal do programa quando ocorrer
+uma exceção e tratá-la.
+
+Para estudar os problemas e características da programação concorrente,
+a linguagem de programação Java foi utilizada no desenvolvimento de um
+aplicativo chamado de \textbf{Bitcity}. Essa aplicação trabalha com um
+modelo textual, construindo um mundo a partir da mesma e controlando
+acesso a recursos compartilhados.
 
 \quad\\
 \quad\\
