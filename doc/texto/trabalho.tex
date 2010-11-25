@@ -25,7 +25,7 @@ $..$A#############
 *> A-     B>>
 ###$ ######B #####
   #$ #    #  #    
-  #$ #    #+ #####
+  #$> &   #+ #####
 ###$ #    #+    <*
 \end{verbatim}
   \caption{Exemplo demonstrativo \label{short-one}}
@@ -36,7 +36,8 @@ quantidade de linhas, quantidade de colunas, número de pontos de
 partida, número de conjuntos de semáforos a serem sincronizados e a
 quantidade máxima de carros no mundo num dado instante.
 
-O caractere \verb!`#'! representa calçada, \verb!`$'! representa
+O caractere \verb!`#'! representa calçada, \verb!`&'! é um
+estacionamento, \verb!`$'! representa
 vegetação rasteira, \verb!`.'! uma árvore que ganha e perde folhas ao
 longo da execução, uma letra qualquer que se repete indica semáforos
 que pertencem a um mesmo conjunto. Os pontos de partida, que ficam
@@ -62,18 +63,25 @@ visão é utilizada para tomada de seis decisões:
 \item[Escolher entre mudar de direção ou não]: O elemento à frente
   contém um dos caracteres que indicam uma direção e à frente deste
   outro caractere, considerando a direção que representa, o símbolo
-  não se repete. Situação da linha 5, coluna 5 no Modelo \ref{short-one}.
+  não se repete. Situação da linha 5, coluna 5 no Modelo
+  \ref{short-one} e também na linha 8, coluna 5 para entrar em uma garagem.
 \item[Parar no semáforo]: Veículo, exceto ambulância, depara-se com
   sinal vermelho e obrigatoriamente para.
 \item[Buzinar]: O sinal está aberto, porém existe um veículo a sua
   frente que está parado.
-\item[Sair do mundo]: O veículo atingiu o limite do mundo. No Modelo
-  \ref{short-one} essa situação pode ocorrer somente ao atingir uma
-  linha após a 9 na coluna 5 e também uma coluna após a 18 na linha 5.
+\item[Sair do mundo]: O veículo atingiu o limite do mundo ou um
+  estacionamento. No Modelo
+  \ref{short-one} essa situação pode ocorrer ao atingir tanto uma
+  linha após a 9 na coluna 5, uma coluna após a 18 na linha 5 ou
+  a linha 8, coluna 7.
 \item[Deslocar-se]: Posição à frente não contém nenhum elemento
   especial, o veículo pode continuar deslocando-se seguindo sua
   direção corrente.
 \end{description}
+Além disso, todos os pontos de partida devem estar ligados -- no mesmo
+sentido de um grafo conexo. Deve ser possível atingir todos os outros
+pontos partindo de qualquer um deles, sem considerar a direção de
+deslocamento de veículos.
 
 A aplicação espera iniciar sua execução com um modelo que se adeque as
 especificações a cima. Caso isso não ocorra, a classe \verb!Parser!
@@ -87,29 +95,31 @@ responsável por essa tarefa. Na implementação atual, essa renderização
 é bastante simplificada, sendo feito uso de recursos simples como
 retângulos e círculos que são desenhados através de métodos existentes
 da classe \verb!Graphics2D!. As Figuras \ref{fig1} e \ref{fig2} exibem
-o resultado desta etapa para o Modelo \ref{short-one}.
-
+o resultado desta etapa para o Modelo \ref{short-one} em momentos
+distintos durante a execução.
 \begin{figure}[ht!]
   \centering
   \subfigure[Árvores crescendo, deslocamento de carros e outros detalhes \label{fig1}]{
-    \includegraphics[scale=0.60]{figs/map1_1.png}
-%  \caption{Modelo \ref{short-one} renderizado \label{fig1}}
+    \includegraphics[scale=0.58]{figs/map1_1.png}
   }
-%\end{figure}
-%\begin{figure}[ht!]
-%  \centering
   \subfigure[Chovendo no mundo \label{fig2}]{
-    \includegraphics[scale=0.60]{figs/map1_2.png}
-  %\caption{Chovendo no mundo \label{fig2}}
+    \includegraphics[scale=0.58]{figs/map1_2.png}
   }
   \caption{Modelo \ref{short-one} renderizado}
 \end{figure}
-
+A distinção entre ruas e vegetação comum exibida não requer elementos
+especiais no modelo textual. O algoritmo \textit{4-way flood fill} é
+aplicado a um ponto de partida qualquer e todas as posições atingidas,
+considerando que calçada, garagem e vegetação rasteira são bordas
+nesse preenchimento, são coloridas de preto. Isso colore todas as ruas
+devido a restrição dos pontos serem ligados. Em relação a calçadas e
+estacionamentos, atualmente não há distinção visual entre os dois
+elementos.
 
 A renderização do mundo ocorre em um \textit{thread} a parte, sendo
 esta criada durante a inicialização da aplicação. É permitido ajustar
 a velocidade da taxa de atualização, ou \textit{Frames Per Second} (FPS),
-durante a execução, podendo variar entre 30 e 45 renderizações por
+durante a execução, podendo variar de 30 a 45 renderizações por
 segundo do mundo por completo. Durante estas atualizações também
 decide-se entre criar um novo carro (classe \verb!Car!) ou não,
 inserir uma ambulância ou não, iniciar chuva e também brotar folhas em
