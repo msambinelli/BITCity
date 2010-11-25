@@ -12,4 +12,73 @@ retângulos brancos surgem e representam uma ambulância que age como um
 coletor de recursos, folhas crescem em árvores e a chuva faz as mesmas
 caírem.
 
-O modelo textual ... XXX
+O Modelo \ref{short-one} apresenta todos os elementos que podem ser
+encontrados no modelo textual.
+
+\begin{model}
+\begin{verbatim}
+9 18 3 2 15
+######           #
+*>  -#           #
+$..$-#           # 
+$..$A#############
+*> A-     B>>
+###$ ######B #####
+  #$ #    #  #    
+  #$ #    #+ #####
+###$ #    #+    <*
+\end{verbatim}
+  \caption{Exemplo demonstrativo \label{short-one}}
+\end{model}
+
+A primeira linha contém quatro inteiros que descrevem, respectivamente,
+quantidade de linhas, quantidade de colunas, número de pontos de
+partida, número de conjuntos de semáforos a serem sincronizados e a
+quantidade máxima de carros no mundo num dado instante.
+
+O caractere \verb!`#'! representa calçada, \verb!`$'! representa
+vegetação rasteira, \verb!`.'! uma árvore que ganha e perde folhas ao
+longo da execução, uma letra qualquer que se repete indica semáforos
+que pertencem a um mesmo conjunto. Os pontos de partida, que ficam
+responsáveis por indicar os locais onde carros surgem no mundo, são
+representados por \verb!`*'!. Os símbolos \verb!`+'!, \verb!`-'!,
+\verb!`>'! e \verb!`<'! indicam, respectivamente, para cima, para
+baixo, esquerda e direita e são utilizados pelos veículos para
+movimentação no mundo.
+
+O modelo é projetado de forma a simplificar a construção do mundo e
+também o \textit{parsing} do mesmo. Todo ponto de partida precisa,
+necessariamente, que uma direção inicial esteja presente ou
+imediatamente a sua direita, ou a esquerda, ou em cima ou
+embaixo. Essa direção define a direção de deslocamento inicial de
+todos os carros que partirem daquele ponto. Os carros possuem uma
+unidade de visão à sua frente, considerando sua direção atual. Esta
+visão é utilizada para tomada de seis decisões:
+\begin{description}
+\item[Mudar direção atual]: O elemento à frente contém um dos
+  caracteres que indicam uma direção e à frente deste outro caractere,
+  considerando a direção que representa, o símbolo se repete. Esse
+  caso ocorre no Modelo \ref{short-one} na linha 2, coluna 5.
+\item[Escolher entre mudar de direção ou não]: O elemento à frente
+  contém um dos caracteres que indicam uma direção e à frente deste
+  outro caractere, considerando a direção que representa, o símbolo
+  não se repete. Situação da linha 5, coluna 5 no Modelo \ref{short-one}.
+\item[Parar no semáforo]: Veículo, exceto ambulância, depara-se com
+  sinal vermelho e obrigatoriamente para.
+\item[Buzinar]: O sinal está aberto, porém existe um veículo a sua
+  frente que está parado.
+\item[Sair do mundo]: O veículo atingiu o limite do mundo. No Modelo
+  \ref{short-one} essa situação pode ocorrer somente ao atingir uma
+  linha após a 9 na coluna 5 e também uma coluna após a 18 na linha 5.
+\item[Deslocar-se]: Posição à frente não contém nenhum elemento
+  especial, o veículo pode continuar deslocando-se seguindo sua
+  direção corrente.
+\end{description}
+
+A aplicação espera iniciar sua execução com um modelo que se adeque as
+especificações a cima. Caso isso não ocorra, a classe \verb!Parser!
+fica responsável por detectar o problema e levantar uma exceção. A
+classe \verb!Application! fica responsável por tratar esta exceção,
+sendo exibido o erro encontrado e abortando a execução da aplicação.
+Recebendo um modelo correto, a aplicação trata de renderizar o mundo
+especificado. ...
