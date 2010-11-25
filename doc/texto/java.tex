@@ -34,9 +34,9 @@ antes que qualquer outro método inicie suas operações sobre o mesmo objeto.
 Um objeto que possui métodos sincronizados deve possuir uma fila para
 guardar os métodos que tentaram acessar o objeto enquanto este estava sendo
 utilizado por um outro método sincronizado. Assim quando o método que
-atualmente está utilizando o objeto terminar as suas operações sobre esse
-, deve-se permitir que um próximo método da fila de espera realize suas
-operações sobre o objeto. 
+atualmente está utilizando o objeto terminar as suas operações sobre esse,
+deve-se permitir que um próximo método da fila de espera realize suas
+operações sobre o objeto.
 
 Abaixo é mostrado um pequeno exemplo retirado de \cite{sebesta}. O exemplo
 mostra dois métodos modificados com \texttt{synchronized} e desta forma
@@ -70,42 +70,38 @@ satisfeita o objeto é bloqueado durante a execução do corpo de
 \section{Exception}
 
 A linguagem de programação Java utiliza exceções para tratar erros e
-demais eventos excepcionais. Uma exceção é um evento que ocorre durante
+eventos excepcionais. Uma exceção é um evento que ocorre durante
 a execução de um programa que interrompe o fluxo normal das instruções
 \cite{except}.
 
 O primeiro passo na construção de um manipulador de exceção é colocar
-o código que pode lançar uma exceção dentro de um bloco \texttt{try}. Em geral,
-um bloco \texttt{try} é semelhante ao seguinte.
-
+o código que pode lançar uma exceção dentro de um bloco
+\texttt{try} \cite{try1}. A forma geral para tratamento de exceções é:
 \begin{lstlisting}
-
 try {
     code
+} catch (ExceptionType1 e) {
+    handle exception
+} catch (ExceptionType2 e) {
+    handle exception
 }
-catch and finally blocks . . .
-    
+.
+.
+} finally {
+    cleanup
+}
 \end{lstlisting}
+Sendo possível emitir o bloco \texttt{finally}.
 
+Caso ocorra uma exceção no código contido no bloco \texttt{try},
+a máquina virtual procura por um bloco que trata da exceção (bloco
+\texttt{catch}) condizente com a exceção levantada. O primeiro
+encontrado, considerando a pilha de execução, é utilizado para tratar
+o evento excepcional. Caso não seja encontrado um bloco adequado, a
+aplicação é encerrada.
 
-Se ocorrer uma exceção no bloco \texttt{try}, a exceção é tratada por um
-manipulador de exceção a ele associado. Para associar um manipulador de
-exceção com um bloco \texttt{try}, você definir colocar um bloco
-\texttt{catch}.
-
-Você associa manipuladores de exceção, com um bloco \texttt{try}, fornecendo
-um ou mais blocos \texttt{catch} logo após o bloco \texttt{try}. Nenhum
-código pode ser entre o final do bloco \texttt{try} e no início do primeiro bloco % WTF?!
-\texttt{catch}.
-
-\begin{lstlisting}
-
-try {
-     
-} catch (ExceptionType name) {
-     
-} catch (ExceptionType name) {
-     
-}  
-
-\end{lstlisting}
+O bloco \texttt{finally} é sempre executado (exceto em casos limite
+\cite{try1}, independente de haver 
+ocorrência de exceções sem tratamento previsto. Isso possibilita que
+este bloco seja utilizado para encerrar recursos alocados no bloco
+\texttt{try} de forma segura.
