@@ -189,14 +189,13 @@ outra tarefa está atualmente ativa dentro do monitor. Se estiver, a tarefa
 que o invocou será suspensa até que a outra tarefa deixe o monitor. Se nenhuma
 outra tarefa estiver usando o monitor, a tarefa que o invocou poderá entrar.
 
-%\subsubsection{Inversão de Prioridade}
-%
-%Considere um computador com dois processos: H, com alta prioridade, e L, com baixa prioridade. 
-%As regras de escalonamento são tais que H é executado sempre que estiver no estado pronto. 
-%Em certo momento, com L em sua região crítica, H torna-se pronto para executar. Agora H inicia 
-%uma espera ociosa, mas, como L nunca é escalonado enquanto H está executando, L nunca tem a 
-%oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação 
-%é referida como problema da inversão de prioridade.
+\subsubsection{Inversão de Prioridade}
+
+Inversão de prioridade descreve um caso geral onde uma tarefa de baixa
+prioridade guarda um recurso compartilhada para uso exclusivo que é
+requerido por uma tarefa de alta prioridade \cite{intel}. A tarefa de alta
+prioridade é então forçada a ficar bloqueada enquanto a tarefa de baixa
+prioridade não liberar o recurso.
 
 \subsection{Memória Transacional}
 
