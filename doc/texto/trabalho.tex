@@ -167,9 +167,9 @@ estejam em seu caminho e que não se desloquem ao mesmo tempo em que a
 ambulância passa. Isso é feito pois a criação de linhas de execução
 extras consome espaço no \textit{heap}, sendo possível ultrapassar o
 limite disponível com mapas maiores que comportam uma grande
-quantidade de carros ao mesmo tempo. XXX Falar ainda do problema que
-isso vai causar XXX. XXX Colocar alguma referencia em relação ao
-tamanho variável que uma thread pode ocupar em heap quando criada XXX.
+quantidade de carros ao mesmo tempo.% XXX Falar ainda do problema que
+%isso vai causar XXX. XXX Colocar alguma referencia em relação ao
+%tamanho variável que uma thread pode ocupar em heap quando criada XXX.
 
 A remoção de veículos no mundo ocorre por meio do uso de exceções. No
 momento em que um carro toma a decisão de sair do mundo, uma exceção é
@@ -182,3 +182,20 @@ efeitos sonoros, também é feito uso de tratamento de exceções para
 garantir que problemas de: falta de suporte ao formato de audio,
 arquivo inexistente ou dispositivo de som ocupado; não causem um
 encerramento prematura da aplicação.
+
+\section{Hierarquia de Classes}
+
+A Figura \ref{hierarchy} apresenta a hierarquia das classes da
+\textbf{Bitcity}.
+
+\begin{figure}[ht!]
+  \centering
+  \includegraphics[scale=0.58]{figs/hierarchy}
+  \caption{Classes em amarelo percentem a Java, em branco a aplicação \label{hierarchy}}
+\end{figure}
+
+A classe \verb!Application! ficou responsável por implementar o método
+\verb!main! e iniciar a execução da aplicação. A classe \verb!Drop! é
+utilizada pela \verb!Rain! para desenhar as gotas de chuva. Por
+último, a \verb!TrafficLight! faz uso da \verb!Semaphore! para
+controlar o tráfego.
