@@ -1,8 +1,6 @@
 \chapter{Concorrência e Exceções}
 
-\section{Concorrência}
-
-Há várias níveis de concorrência: concorrência de instrução de máquina, onde são
+Há alguns níveis de concorrência: concorrência de instrução de máquina, onde são
 executadas mais do que uma instrução de máquina por vez; concorrência de
 instrução, onde são executadas mais do que uma instrução por vez;
 concorrência em nível de unidade, onde são executadas mais do que uma
@@ -11,17 +9,17 @@ do que um subprograma por vez.
 
 Uma unidade pode ser executada concorrentemente de duas formas: fisicamente
 ou logicamente. Na concorrência física duas ou mais unidades do mesmo
-programa estão executando simultaneamente, sendo necessário a existência de
-mais do que um processador para que isso seja possível. Quando não há a
+programa são executadas simultaneamente, sendo necessário a existência de
+mais de um processador para que isso seja possível. Quando não há a
 disponibilidade de múltiplos processadores pode ocorrer a concorrência
 lógica, onde o programador e o programa supõem a existência de múltiplos
-processadores fornecendo a concorrência física, quando na verdade a
+processadores fornecendo a concorrência física, enquanto na verdade a
 execução das unidades está sendo realizada de forma intercalada. Esta
 ilusão é semelhante à ilusão de execução simultânea oferecida a diferentes
 usuários de um sistema de computadores com multiprogramação.
 
 Para visualizar um fluxo de execução de um programa, podemos imaginar uma
-linha({\it Thread}) disposta sobre o código fonte. Cada linha representa um
+linha ({\it thread}) disposta sobre o código fonte. Cada linha representa um
 fluxo de execução dentro do programa. Programas executando em computadores
 multiprocessadores podem executar cada fluxo (linha) em um processador
 diferente simultaneamente. Na concorrência lógica,  múltiplas linhas do
@@ -31,7 +29,7 @@ virtualmente múltiplas linhas.
 Uma tarefa é uma unidade de um programa que pode estar em execução
 concorrente com outras unidades do mesmo programa. Cada tarefa de um
 programa pode oferecer uma linha de controle \cite{sebesta}. Diferente de
-um subprograma, as tarefas podem ser implicitamente inicializadas, além
+um subprograma, as tarefas podem ser implicitamente inicializadas e, além
 disso, quando uma unidade invoca uma tarefa, ela não precisa esperar que
 está termine para continuar a sua execução.
 
@@ -40,14 +38,16 @@ de algum mecanismo de sincronização para manter a consistência desses
 dados. Atualmente o método de se fazer sincronização mais utilizada é
 a exclusão mútua \cite{ARTOFMPP, MCRT}. 
 
-Este capítulo esta organizado da seguinte maneira: Na seção ~\ref{sub:prob}
-será abordado alguns problema comuns na programação paralela. A seção
-~\ref{sub:mecanismo} abordará alguns mecanismos utilizados para se fazer
-a sincronização.
+Este Capítulo está organizado da seguinte maneira: Na Seção \ref{sub:prob}
+será abordado alguns problema comuns na programação paralela. A Seção
+\ref{sub:mecanismo} abordará alguns mecanismos utilizados para se fazer
+a sincronização. Por último, a Seção \ref{sub:except} apresenta 
+conceitos a cerca das exceções.
 
-\subsection{Problemas Comuns na Computação Paralela}
+\section{Problemas Comuns na Computação Paralela}
+\label{sub:prob}
 
-\subsubsection{Condição de Corrida}
+\subsection{Condição de Corrida}
 
 Quando duas tarefas trabalham juntas, eles podem compartilhar algum recurso
 em comum. Uma condição de corrida ocorre quando duas ou mais tarefas
@@ -55,7 +55,7 @@ necessitam efetuar operações em um conjunto de dados compartilhado e o
 resultado destas operações dependem da ordem em que essas operações
 são executadas \cite{tanen}.
 
-\subsubsection{Deadlock}
+\subsection{Deadlock}
 
 Um conjunto de tarefas estará em situação de \textit{deadlock} se todas as
 tarefas pertencentes ao conjunto estiverem esperando por um evento que somente
@@ -108,10 +108,10 @@ para gerar um \textit{deadlock}.
 %repetidamente movem na mesma direção e ao mesmo tempo.
 %
 
-\subsection{Mecanismos de Sincronização}
+\section{Mecanismos de Sincronização}
+\label{sub:mecanismo}
 
-
-\subsubsection{Lock}
+\subsection{Lock}
 
 \textit{Lock} é uma solução de software para tentar impedir que duas
 tarefas acessem os mesmos dados compartilhados simultaneamente,
@@ -125,12 +125,12 @@ se torne 0. Assim, um 0 significa que nenhuma tarefa está utilizando o
 recurso e um 1 indica que existe uma tarefa que está utilizando o recurso.
 
 
-\subsubsection{Lock reentrante}
+\subsection{Lock reentrante}
 
 \textit{Lock} reentrante é um \textit{lock} que pode ser readquirido pela
 \textit{thread} que o possui sem causar \textit{deadlock} com ela mesma.
 
-\subsubsection{Spin}
+\subsection{Spin}
 
 \textit{Spin locks} são um tipo especial de \textit{lock} projetados
 para trabalhar em um ambiente multiprocessador. Se uma tarefa encontra
@@ -140,11 +140,11 @@ A vantagem desse método é que a maioria dos recursos ficam trancadas por
 milissegundos apenas, seria mais custoso liberar a \textit{CPU} e tenta-la
 readquiri-la posteriormente.
 
-\subsubsection{Block}
+\subsection{Block}
 ….
 
 
-\subsubsection{Semáforos}
+\subsection{Semáforos}
 
 Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de
 sinais para despertar salvos para uso futuro.  De acordo com a proposta dele,
@@ -171,7 +171,7 @@ operação \texttt{down}. Portanto, depois de um \texttt{up} em um semáforo
 com tarefas dormindo nele, o semáforo permanecerá 0, mas haverá uma tarefa
 a menor dormindo nele.
 
-\subsubsection{Monitor}
+\subsection{Monitor}
 
 Para facilitar a escrita correta de programas, Hoare e Brinch Hansen propuseram
 uma unidade básica de sincronização de alto nível chamada monitor.
@@ -199,7 +199,7 @@ outra tarefa estiver usando o monitor, a tarefa que o invocou poderá entrar.
 %oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação 
 %é referida como problema da inversão de prioridade.
 
-\subsubsection{Memória Transacional}
+\subsection{Memória Transacional}
 
 
 Memória Transacional tem sido muito discutida atualmente, e o seu grande
@@ -222,7 +222,8 @@ um exemplo de sistema de memória transacional podemos citar  \cite{xxx},
 que estendeu a linguagem \textit{Java} para suportar transações e
 \cite{xxx}, que implementou uma API baseada na famosa biblioteca OpenMP.
 
-\subsection{Exceções}
+\section{Exceções}
+\label{sub:except}
 
 Uma exceção é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o 
 fluxo normal de execução da aplicação. Exceções ocorrem durante a execução de aplicativos, como 
@@ -242,6 +243,8 @@ As vantagens no uso de exceções são:
 \item Agrupamento e diferenciação de erros (e seus respectivos tratamentos)
 \item Obrigatoriedade de tratamento (exceções não podem ser ignoradas)
 \end{itemize}
+
+
 
 \chapter{Concorrência em Java}
 \label{cha:concjava}
@@ -304,7 +307,7 @@ try {
 \end{lstlisting}
 
 
-%\subsection{Seção Críticas}
+%\subsection{Seções Críticas}
 %
 %Durante uma parte do tempo, um processo está ocupado fazendo computações
 %internas e outras coisas que não acarretam em condições de disputa. Contudo,
