@@ -31,25 +31,25 @@ em que há acesso à memória compartilhada é chamado de seção crítica.
 \subsection{Lock}
 
 Lock é uma solução de software para tentar impedir que dois processos acessem um recurso 
-simultaneamente. Considere que haja uma única variável compartilhada (lock), inicialmente 
+simultaneamente. Considere que haja uma única variável compartilhada (\textit{lock}), inicialmente 
 contendo o valor 0. Para entrar em sua região crítica, um processo testa antes se há 
-impedimento, verificando o valor da variável lock. Se lock for 0, o processo altera essa 
-variável para 1 e entra na região crítica. Se lock já estiver com o valor 1, o processo 
+impedimento, verificando o valor da variável \textit{lock}. Se \textit{lock} for 0, o processo altera essa 
+variável para 1 e entra na região crítica. Se \textit{lock} já estiver com o valor 1, o processo 
 simplesmente aguardará até que ela se torne 0. Assim, um 0 significa que nenhum processo 
 está utilizando o recurso e um 1 indica que algum processo está utilizando o recurso. 
 
 
 \subsection{Lock reentrante}
 
-Lock reentrante é um lock que pode ser readquirido pela thread que o possui sem causar deadlock com ela mesma.
+\textit{Lock} reentrante é um \textit{lock} que pode ser readquirido pela \textit{thread} que o possui sem causar \textit{deadlock} com ela mesma.
 
 \subsection{Spin}
 
-Spin locks são um tipo especial de lock projetados para trabalhar em um ambiente 
-multiprocessador. Se um processo encontra o spin lock aberto, ele adquiri o lock e entra. 
+\textit{Spin locks} são um tipo especial de \textit{lock} projetados para trabalhar em um ambiente 
+multiprocessador. Se um processo encontra o \textit{spin lock} aberto, ele adquiri o \textit{lock} e entra. 
 Caso contrário ele fica dando voltas, mesmo que ele não tenha nada pra fazer. Isso é bom 
 pois a maioria dos recursos ficam trancadas por milisegundos apenas. Seria pior soltar a 
-CPU e readiquiri-la mais tarde.
+CPU e readquiri-la mais tarde.
 
 \subsection{Block}
 ….
@@ -63,18 +63,18 @@ variável chamado semáforo. Um semáforo poderia conter o valor 0 – indicando
 sinal de acordar foi salvo – ou algum valor positivo se um ou mais sinais de acordar 
 estivessem pendentes.
 
-Dijkstra propôs a existência de duas operações,  douw e up. A operação down sobre um 
+Dijkstra propôs a existência de duas operações,  \textit{douw} e \textit{up}. A operação \textit{down} sobre um 
 semáforo verifica se seu valor é maior que 0. Se for, o decrescerá de um e prosseguirá. 
-Se o valor for 0, o processo será posto para dormir, sem terminar o down. Garante-se que, 
+Se o valor for 0, o processo será posto para dormir, sem terminar o \textit{down}. Garante-se que, 
 uma vez iniciada uma operação de semáforo, nenhum outro processo pode ter acesso ao 
 semáforo até que a operação tenha terminado ou sido bloqueada. Essa atomicidade é 
 absolutamente essencial para resolver os problemas de sincronização e evitar condições 
 de disputa.
 
-A operação up incrementa o valor de um dado semáforo. Se um ou mais processos estivessem 
-dormindo naquele semáforo, incapacitados de terminar uma operação down anterior, um deles 
+A operação \textit{up} incrementa o valor de um dado semáforo. Se um ou mais processos estivessem 
+dormindo naquele semáforo, incapacitados de terminar uma operação \textit{down} anterior, um deles 
 seria escolhido pelo sistema (por exemplo, aleatoriamente) e seria dada a permissão para 
-terminar seu down. Portanto, depois de um up em um semáforo com processos dormindo nele, 
+terminar seu \textit{down}. Portanto, depois de um \textit{up} em um semáforo com processos dormindo nele, 
 o semáforo permanecerá 0, mas haverá um processo a menor dormindo nele.
 
 \subsection{Monitor}
@@ -94,12 +94,12 @@ monitor. Se nenhum outro processo estiver usando o monitor, o processo que chamo
 
 \subsection{Deadlock}
 
-Um conjunto de processos estará em situação de deadlock se todo processo pertencente ao conjunto 
+Um conjunto de processos estará em situação de \textit{deadlock} se todo processo pertencente ao conjunto 
 estiver esperando por um evento que somente um outro processo desse mesmo conjunto poderá fazer 
 acontecer. Como todos os processo estarão esperando, nenhum deles desencadeará qualquer um dos 
 eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre.
 
-Para que ocorra um Deadlock, deve ter quatro condições satisfeitas:
+Para que ocorra um \textit{Deadlock}, deve ter quatro condições satisfeitas:
 
 \begin{itemize}
 \item Condição de exclusão mútua. Em um determinado instante, cada recurso está em uma de duas situações:
@@ -112,25 +112,25 @@ forçosamente tomados desse processo - eles deve ser explicitamente liberados pe
 deles encontra-se à espera de um recurso que está sendo usado pelo membro seguinte dessa cadeia.
 \end{itemize}
 
-Todas essas quatro condições deve estar presentes para que um deadlock ocorra. Se faltar
-uma delas, não ocorrerá deadlock.
+Todas essas quatro condições deve estar presentes para que um \textit{deadlock} ocorra. Se faltar
+uma delas, não ocorrerá \textit{deadlock}.
 
-Em geral, quatro estratégias são usadas para tratar deadlocks:
+Em geral, quatro estratégias são usadas para tratar \textit{deadlocks}:
 
 \begin{itemize}
 \item Ignorar por completo o problema.
-\item Detecção e recuperação. Deixar os deadlocks ocorrer, detectá-los e agir.
+\item Detecção e recuperação. Deixar os \textit{deadlocks} ocorrer, detectá-los e agir.
 \item Anulação dinâmica por meio de uma alocação cuidadosa de recursos.
-\item Prevenção, negando estruturalmente algumas das condições necessárias para gerar um deadlock.
+\item Prevenção, negando estruturalmente algumas das condições necessárias para gerar um \textit{deadlock}.
 \end{itemize}
 
 \subsection{Livelock}
 
-Um Livelock é semelhante a um Deadlock, com exceção dos estados dos processos envolvidos na 
-Livelock mudam constantemente em relação um ao outro, nenhum progresso Livelock é um caso 
+Um \textit{Livelock} é semelhante a um \textit{Deadlock}, com exceção dos estados dos processos envolvidos na 
+\textit{Livelock} mudam constantemente em relação um ao outro, nenhum progresso \textit{Livelock} é um caso 
 especial de esgotamento de recursos.
 
-Um exemplo do mundo real de Livelock ocorre quando duas pessoas se encontram em um corredor 
+Um exemplo do mundo real de \textit{Livelock} ocorre quando duas pessoas se encontram em um corredor 
 estreito, e cada um tenta ser educada, movendo de lado para  dar passagem a outra pessoa, 
 mas eles acabam movendo de um lado para o outro sem fazer nenhum progresso porque ambos 
 repetidamente movem na mesma direção e ao mesmo tempo.
@@ -147,7 +147,7 @@ oportunidade de deixar sua região crítica e, assim, H fica em um laço infinit
 \subsection{Memória Transacional}
 
 Memória Transacional atraiu grande interesse por eliminar muitos dos 
-problemas associados ao uso de locks e ainda assim conseguir um ganho em desempenho.
+problemas associados ao uso de \textit{locks} e ainda assim conseguir um ganho em desempenho.
 
 
 Como exemplo, considere diversas tarefas que operam simultaneamente em uma mesma regiões 
