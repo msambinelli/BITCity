@@ -8,11 +8,10 @@
 \usepackage[alf,bibjustif,abnt-etal-list=0]{abntcite}
 \usepackage{alltt}
 \usepackage{booktabs}
-
+\usepackage{float}
 \usepackage{amssymb}
 \usepackage{amsmath}
-
-\usepackage[nice]{nicefrac}
+\usepackage{subfigure}
 
 \usepackage{rotating}
 \usepackage{multirow}
@@ -44,6 +43,10 @@
 \DeclareCaptionFormat{listing}{#1#2#3}
 \captionsetup[lstlisting]{format=listing, textfont=black,
   }
+
+\newfloat{model}{thp}{lop}
+%\captionof{model}{Modelo}
+\floatname{model}{Modelo}
 
 \newcommand{\up}[1]{\raisebox{1.5ex}[0pt]{#1}}
 \input{variaveis.tex}

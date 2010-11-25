@@ -1,15 +1,16 @@
 ROOT = relatorio
+LATEX = pdflatex
 
 all: relatorio
 
+
 relatorio:
-	latex $(ROOT)
+	$(LATEX) $(ROOT)
 	bibtex $(ROOT)
 	bibtex $(ROOT)
-	latex $(ROOT)
-	latex $(ROOT)
-	latex $(ROOT)
-	dvipdf -o$(ROOT).pdf $(ROOT).dvi
+	$(LATEX) $(ROOT)
+	$(LATEX) $(ROOT)
+	$(LATEX) $(ROOT)
 
 clean:
 	rm -rf *~ *.aux *.dvi *.bbl *.blg *.log *.pdf *.lot *.lof *.toc

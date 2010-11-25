@@ -53,7 +53,7 @@ Quando duas tarefas trabalham juntas, eles podem compartilhar algum recurso
 em comum. Uma condição de corrida ocorre quando duas ou mais tarefas
 necessitam efetuar operações em um conjunto de dados compartilhado e o 
 resultado destas operações dependem da ordem em que essas operações
-são executadas.
+são executadas \cite{tanen}.
 
 \subsubsection{Deadlock}
 
@@ -115,7 +115,7 @@ para gerar um \textit{deadlock}.
 
 \textit{Lock} é uma solução de software para tentar impedir que duas
 tarefas acessem os mesmos dados compartilhados simultaneamente,
-implementado assim a exclusão mutua. Considere que haja uma variável
+implementado assim a exclusão mutua \cite{MCRT}. Considere que haja uma variável
 compartilhada (\textit{lock}), inicialmente contendo o valor 0. Quando uma
 tarefa deseja utilizar um recurso compartilhado, ela primeiro testa 
 o valor da variável \textit{lock}. Se \textit{lock} for 0, a tarefa
@@ -151,7 +151,7 @@ sinais para despertar salvos para uso futuro.  De acordo com a proposta dele,
 foi introduzido um novo tipo de variável chamado semáforo. Um semáforo
 poderia conter o valor 0 – indicando que nenhum sinal de acordar foi
 salvo – ou algum valor positivo se um ou mais sinais de acordar estivessem
-pendentes.
+pendentes \cite{TANE}.
 
 Dijkstra propôs a existência de duas operações: \texttt{down} e
 \texttt{up}. A operação \texttt{down} sobre um semáforo verifica se seu
@@ -242,6 +242,38 @@ As vantagens no uso de exceções são:
 \item Agrupamento e diferenciação de erros (e seus respectivos tratamentos)
 \item Obrigatoriedade de tratamento (exceções não podem ser ignoradas)
 \end{itemize}
+
+\chapter{Concorrência em Java}
+
+\section{Synchronized}
+
+O modificador synchronized tem seu uso e importância destacados quando várias threads estão sendo executadas em um programa. Tais threads podem tentar acessar métodos de uma ou mais classes ao mesmo tempo. No entanto, pode ser necessário planejarmos o sistema de forma que determinados métodos possam ser acessados por somente uma thread de cada vez, talvez para garantir a integridade de valores das diversas variáveis envolvidas no processo. É aqui que o modificador synchronized é usado.
+
+Ao marcarmos um método como synchronized, o sistema de execução Java garantirá que apenas uma thread de cada vez acesse tal método. Se outras threads tentarem fazer o mesmo, elas serão colocadas em espera até que a thread atual finalize seu trabalho e libere o método.
+
+\section{Exception}
+
+A linguagem de programação Java utiliza exceções para tratar erros e demais eventos excepcionais. Uma exceção é um evento que ocorre durante a execução de um programa que interrompe o fluxo normal das instruções \cite{except}.
+
+O primeiro passo na construção de um manipulador de exceção é colocar o código que pode lançar uma exceção dentro de um bloco try. Em geral, um bloco try é semelhante ao seguinte.
+
+try {
+    code
+}
+catch and finally blocks . . .
+
+Se ocorrer uma exceção no bloco try, a exceção é tratada por um manipulador de exceção a ela associados. Para associar um manipulador de exceção com um bloco try, você deve colocar um bloco catch.
+
+Você associa manipuladores de exceção, com um bloco try, fornecendo um ou mais blocos catch logo após o bloco try. Nenhum código pode ser entre o final do bloco try e no início do primeiro bloco catch.
+
+try {
+     
+} catch (ExceptionType name) {
+     
+} catch (ExceptionType name) {
+     
+}  
+
 
 
 %\subsection{Seção Críticas}
