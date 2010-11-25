@@ -98,6 +98,7 @@ retângulos e círculos que são desenhados através de métodos existentes
 da classe \verb!Graphics2D!. As Figuras \ref{fig1} e \ref{fig2} exibem
 o resultado desta etapa para o Modelo \ref{short-one} em momentos
 distintos durante a execução.
+
 \begin{figure}[ht!]
   \centering
   \subfigure[Árvores crescendo, deslocamento de carros, outros detalhes \label{fig1}]{
@@ -108,6 +109,7 @@ distintos durante a execução.
   }
   \caption{Modelo \ref{short-one} renderizado}
 \end{figure}
+
 A distinção entre ruas e vegetação comum exibida não requer elementos
 especiais no modelo textual. O algoritmo \textit{4-way flood fill} é
 aplicado a um ponto de partida qualquer e todas as posições atingidas,
@@ -159,5 +161,24 @@ chovendo.
 Um último recurso de destaque no mundo é a ambulância, criada por meio
 da classe \verb!Ambulance!. É permitido que somente uma desta esteja
 no mundo ao mesmo tempo e ela só é criada caso o total de carros em
-circulação seja superior a quantidade $max - 4$. XXX Falar de custo de
-criar thread, ocupação de memória, limites... XXX
+circulação seja superior a quantidade $max - 4$. Uma ambulância age
+como uma forma de coletor de \textit{threads}, destruindo carros que
+estejam em seu caminho e que não se desloquem ao mesmo tempo que a
+ambulância passa. Isso é feito pois a criação de linhas de execução
+extras consome espaço no \textit{heap}, sendo possível ultrapassar o
+limite disponível com mapas maiores que comportam uma grande
+quantidade de carros ao mesmo tempo. XXX Falar ainda do problema que
+isso vai causar XXX. XXX Colocar alguma referencia em relação ao
+tamanho variável que uma thread pode ocupar em heap quando criada XXX.
+
+A remoção de veículos no mundo ocorre por meio do uso de exceções. No
+momento em que um carro toma a decisão de sair do mundo, uma exceção é
+levantada e o método \verb!run! do respectivo objetivo trata essa
+situação como encerramento da \textit{thread}. No caso de ambulância
+também é feito uso da \textit{keyword} \verb!finally! para garantir
+que um efeito sonoro, que é iniciado ao instanciar uma ambulância,
+seja desativado. Em outros momentos onde ocorre a utilização de
+efeitos sonoros, também é feito uso de tratamento de exceções para
+garantir que problemas de: falta de suporte ao formato de audio,
+arquivo inexistente ou dispositivo de som ocupado; não causem um
+encerramento prematura da aplicação.
