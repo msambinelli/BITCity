@@ -1,184 +1,239 @@
 \chapter{Concorrência e Exceções}
 
-Em alguns sistemas computacionais, processos que trabalham juntos podem compartilhar algum 
-serviço em comum. Com efeito, a gestão da concorrência entre processos é a fonte de inúmeras 
-dificuldades no desenvolvimento de software; o acesso descoordenado a um recurso (a chamada 
-condição de corrida) induz no sistema um comportamento imprevisível.
-
-Para evitar esse problema de recursos compartilhados devemos encontrar algum modo de impedir 
-que mais de um processo utilize ao mesmo tempo estes recursos. Em outras palavras, precisamos 
-de exclusão mútua, isto é, algum modo de assegurar que outros processos seja impedidos de usar 
-um recurso que já estiver em uso por um processo.
-
-Para realizar exclusão mútua de modo que, enquanto um processo estiver ocupado utilizando um 
-recurso, nenhum outro processo cause problemas. Temos as seguintes alternativas:
-
-Quando um programa não é executado de forma esperada é necessário informar o que está acontecendo ao desenvolvedor. Algumas vezes o programa pode parar de executar por conta desses erros e o desenvolvedor não tem ideia do que está acontecendo. E o pior de tudo isso, é que às vezes o programa para por conta de uma simples divisão por zero vinda do usuário. Então devemos cria exceções, que é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o fluxo normal de execução da aplicação.
-
 \section{Concorrência}
 
-\subsection{Condição de Disputa}
+Há várias níveis de concorrência: concorrência de instrução de máquina, onde são
+executadas mais do que uma instrução de máquina por vez; concorrência de
+instrução, onde são executadas mais do que uma instrução por vez;
+concorrência em nível de unidade, onde são executadas mais do que uma
+unidade de subprograma por vez; nível de programa, onde são executados mais
+do que um subprograma por vez. 
 
-Quando dois processos trabalham juntos, eles podem compartilhar algum recurso em comum. Uma condição de disputa ocorre quando dois ou mais processos necessitam efetuar operações em uma mesma área de memória, mas os resultados destas operações dependem da ordem em que essas operações são executadas.
+Uma unidade pode ser executada concorrentemente de duas formas: fisicamente
+ou logicamente. Na concorrência física duas ou mais unidades do mesmo
+programa estão executando simultaneamente, sendo necessário a existência de
+mais do que um processador para que isso seja possível. Quando não há a
+disponibilidade de múltiplos processadores pode ocorrer a concorrência
+lógica, onde o programador e o programa supõem a existência de múltiplos
+processadores fornecendo a concorrência física, quando na verdade a
+execução das unidades está sendo realizada de forma intercalada. Esta
+ilusão é semelhante à ilusão de execução simultânea oferecida a diferentes
+usuários de um sistema de computadores com multiprogramação.
 
-\subsection{Seção Críticas}
+Para visualizar um fluxo de execução de um programa, podemos imaginar uma
+linha({\it Thread}) disposta sobre o código fonte. Cada linha representa um
+fluxo de execução dentro do programa. Programas executando em computadores
+multiprocessadores podem executar cada fluxo (linha) em um processador
+diferente simultaneamente. Na concorrência lógica,  múltiplas linhas do
+programa são mapeadas em apenas uma, fazendo com que o programa tenha
+virtualmente múltiplas linhas. 
 
-Durante uma parte do tempo, um processo está ocupado fazendo computações internas e outras coisas que não acarretam
-em condições de disputa. Contudo, algumas vezes, um processo precisa ter acesso à memória compartilhada ou a recursos compartilhados ou tem que fazer outras coisas críticas que podem ocasionar disputas. Aquela parte do programa
-em que há acesso à memória compartilhada é chamado de seção crítica.
+Uma tarefa é uma unidade de um programa que pode estar em execução
+concorrente com outras unidades do mesmo programa. Cada tarefa de um
+programa pode oferecer uma linha de controle \cite{sebesta}. Diferente de
+um subprograma, as tarefas podem ser implicitamente inicializadas, além
+disso, quando uma unidade invoca uma tarefa, ela não precisa esperar que
+está termine para continuar a sua execução.
 
+Como todas as linhas compartilham os mesmos dados é necessário a utilização
+de algum mecanismo de sincronização para manter a consistência desses
+dados. Atualmente o método de se fazer sincronização mais utilizada é
+a exclusão mútua \cite{ARTOFMPP, MCRT}. 
 
-\subsection{Lock}
+Este capítulo esta organizado da seguinte maneira: Na seção ~\ref{sub:prob}
+será abordado alguns problema comuns na programação paralela. A seção
+~\ref{sub:mecanismo} abordará alguns mecanismos utilizados para se fazer
+a sincronização.
 
-Lock é uma solução de software para tentar impedir que dois processos acessem um recurso 
-simultaneamente. Considere que haja uma única variável compartilhada (\textit{lock}), inicialmente 
-contendo o valor 0. Para entrar em sua região crítica, um processo testa antes se há 
-impedimento, verificando o valor da variável \textit{lock}. Se \textit{lock} for 0, o processo altera essa 
-variável para 1 e entra na região crítica. Se \textit{lock} já estiver com o valor 1, o processo 
-simplesmente aguardará até que ela se torne 0. Assim, um 0 significa que nenhum processo 
-está utilizando o recurso e um 1 indica que algum processo está utilizando o recurso. 
+\subsection{Problemas Comuns na Computação Paralela}
 
+\subsection{Condição de Corrida}
 
-\subsection{Lock reentrante}
+Quando duas tarefas trabalham juntas, eles podem compartilhar algum recurso
+em comum. Uma condição de corrida ocorre quando duas ou mais tarefas
+necessitam efetuar operações em um conjunto de dados compartilhado e o 
+resultado destas operações dependem da ordem em que essas operações
+são executadas.
 
-\textit{Lock} reentrante é um \textit{lock} que pode ser readquirido pela \textit{thread} que o possui sem causar \textit{deadlock} com ela mesma.
+\subsubsection{Deadlock}
 
-\subsection{Spin}
+Um conjunto de tarefas estará em situação de \textit{deadlock} se todas as
+tarefas pertencentes ao conjunto estiverem esperando por um evento que somente
+tarefa desse mesmo conjunto possa realizar. Como todas as tarefas estarão
+esperando, nenhuma delas desencadeará qualquer um dos eventos que a outra
+esta esperando e, assim, todas as atividades continuam a esperar para sempre.
 
-\textit{Spin locks} são um tipo especial de \textit{lock} projetados para trabalhar em um ambiente 
-multiprocessador. Se um processo encontra o \textit{spin lock} aberto, ele adquiri o \textit{lock} e entra. 
-Caso contrário ele fica dando voltas, mesmo que ele não tenha nada pra fazer. Isso é bom 
-pois a maioria dos recursos ficam trancadas por milisegundos apenas. Seria pior soltar a 
-CPU e readquiri-la mais tarde.
-
-\subsection{Block}
-….
-
-
-\subsection{Semáforos}
-
-Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de vezes que o 
-processo foi acordado. De acordo com a proposta dele, foi introduzido um novo tipo de 
-variável chamado semáforo. Um semáforo poderia conter o valor 0 – indicando que nenhum 
-sinal de acordar foi salvo – ou algum valor positivo se um ou mais sinais de acordar 
-estivessem pendentes.
-
-Dijkstra propôs a existência de duas operações,  \textit{douw} e \textit{up}. A operação \textit{down} sobre um 
-semáforo verifica se seu valor é maior que 0. Se for, o decrescerá de um e prosseguirá. 
-Se o valor for 0, o processo será posto para dormir, sem terminar o \textit{down}. Garante-se que, 
-uma vez iniciada uma operação de semáforo, nenhum outro processo pode ter acesso ao 
-semáforo até que a operação tenha terminado ou sido bloqueada. Essa atomicidade é 
-absolutamente essencial para resolver os problemas de sincronização e evitar condições 
-de disputa.
-
-A operação \textit{up} incrementa o valor de um dado semáforo. Se um ou mais processos estivessem 
-dormindo naquele semáforo, incapacitados de terminar uma operação \textit{down} anterior, um deles 
-seria escolhido pelo sistema (por exemplo, aleatoriamente) e seria dada a permissão para 
-terminar seu \textit{down}. Portanto, depois de um \textit{up} em um semáforo com processos dormindo nele, 
-o semáforo permanecerá 0, mas haverá um processo a menor dormindo nele.
-
-\subsection{Monitor}
-
-Para facilitar a escrita correta de programas, Hoare e Brinch Hansen propuseram uma unidade 
-básica de sincronização de alto nível chamada monitor.  Um monitor é uma coleção de procedimentos, 
-variáveis e estruturas de dados, tudo isso agrupado em um tipo especial de módulo. Os processos 
-podem chamar os procedimentos de um monitor quando quiserem, mas não podem ter acesso direto às 
-estruturas internas de dados ao monitor a partir de procedimentos declarados fora do monitor.
-
-Os monitores apresentam uma propriedade importante que os torna úteis para realizar a exclusão mútua: 
-somente um processo pode estar ativo em um monitor em um dado momento. O monitor é uma construção da 
-linguagem de programação. Em geral, quando um processo chama um procedimento do monitor, algumas das 
-primeira instruções do procedimento verificarão  se qualquer outro processo está atualmente ativo 
-dentro do monitor. Se estiver, o processo que chamou será suspenso até que o outro processo deixe o 
-monitor. Se nenhum outro processo estiver usando o monitor, o processo que chamou poderá entrar.
-
-\subsection{Deadlock}
-
-Um conjunto de processos estará em situação de \textit{deadlock} se todo processo pertencente ao conjunto 
-estiver esperando por um evento que somente um outro processo desse mesmo conjunto poderá fazer 
-acontecer. Como todos os processo estarão esperando, nenhum deles desencadeará qualquer um dos 
-eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre.
-
-Para que ocorra um \textit{Deadlock}, deve ter quatro condições satisfeitas:
+Para que ocorra um \textit{Deadlock}, deve haver quatro condições satisfeitas:
 
 \begin{itemize}
-\item Condição de exclusão mútua. Em um determinado instante, cada recurso está em uma de duas situações:
-ou associado a um único processo ou disponível.
-\item Condição de posse e espera. Processos que, em um determinado instante, retêm recursos concedidos
-anteriormente podem requisitar novos recursos.
-\item Condição de não preempção. Recursos concedidos previamente a um processo não podem ser 
-forçosamente tomados desse processo - eles deve ser explicitamente liberados pelo processo que os retém.
-\item Condição de espera circular. Deve existir um encadeamento circular de dois ou mais processos; cada um
-deles encontra-se à espera de um recurso que está sendo usado pelo membro seguinte dessa cadeia.
+\item \textit{Condição de exclusão mútua}: Em um determinado instante,
+cada recurso está em uma de duas situações: ou associado a uma única tarefa
+ou disponível. 
+\item \textit{Condição de posse e espera}: Tarefas que,
+em um determinado instante, retêm recursos concedidos anteriormente podem
+requisitar novos recursos. 
+\item \textit{Condição de não preempção}:
+Recursos concedidos previamente a uma tarefa não podem ser forçadamente
+tomados - eles deve ser explicitamente liberados pela tarefa que os retém.
+\item \textit{Condição de espera circular}: Deve existir um encadeamento
+circular de duas ou mais tarefas; cada uma delas encontra-se à espera de
+um recurso que está sendo usado pelo membro seguinte dessa cadeia.
 \end{itemize}
 
-Todas essas quatro condições deve estar presentes para que um \textit{deadlock} ocorra. Se faltar
-uma delas, não ocorrerá \textit{deadlock}.
+Todas essas quatro condições deve estar presentes para que um
+\textit{deadlock} ocorra. Se faltar uma delas, não ocorrerá
+\textit{deadlock}.
 
 Em geral, quatro estratégias são usadas para tratar \textit{deadlocks}:
 
 \begin{itemize}
 \item Ignorar por completo o problema.
-\item Detecção e recuperação. Deixar os \textit{deadlocks} ocorrer, detectá-los e agir.
+\item Detecção e recuperação. Deixar os \textit{deadlocks} ocorrer,
+detectá-los e agir.
 \item Anulação dinâmica por meio de uma alocação cuidadosa de recursos.
-\item Prevenção, negando estruturalmente algumas das condições necessárias para gerar um \textit{deadlock}.
+\item Prevenção, negando estruturalmente algumas das condições necessárias
+para gerar um \textit{deadlock}.
 \end{itemize}
 
-\subsection{Livelock}
+%\subsubsection{Livelock}
+%
+% WTF?
+%Um \textit{Livelock} é semelhante a um \textit{Deadlock}, com exceção dos estados dos processos envolvidos na 
+%\textit{Livelock} mudam constantemente em relação um ao outro, nenhum progresso \textit{Livelock} é um caso 
+%especial de esgotamento de recursos.
+%
+%Um exemplo do mundo real de \textit{Livelock} ocorre quando duas pessoas se encontram em um corredor 
+%estreito, e cada um tenta ser educada, movendo de lado para  dar passagem a outra pessoa, 
+%mas eles acabam movendo de um lado para o outro sem fazer nenhum progresso porque ambos 
+%repetidamente movem na mesma direção e ao mesmo tempo.
+%
 
-Um \textit{Livelock} é semelhante a um \textit{Deadlock}, com exceção dos estados dos processos envolvidos na 
-\textit{Livelock} mudam constantemente em relação um ao outro, nenhum progresso \textit{Livelock} é um caso 
-especial de esgotamento de recursos.
-
-Um exemplo do mundo real de \textit{Livelock} ocorre quando duas pessoas se encontram em um corredor 
-estreito, e cada um tenta ser educada, movendo de lado para  dar passagem a outra pessoa, 
-mas eles acabam movendo de um lado para o outro sem fazer nenhum progresso porque ambos 
-repetidamente movem na mesma direção e ao mesmo tempo.
-
-\subsection{Inversão de Prioridade}
-
-Considere um computador com dois processos: H, com alta prioridade, e L, com baixa prioridade. 
-As regras de escalonamento são tais que H é executado sempre que estiver no estado pronto. 
-Em certo momento, com L em sua região crítica, H torna-se pronto para executar. Agora H inicia 
-uma espera ociosa, mas, como L nunca é escalonado enquanto H está executando, L nunca tem a 
-oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação 
-é referida como problema da inversão de prioridade.
-
-\subsection{Memória Transacional}
-
-Memória Transacional atraiu grande interesse por eliminar muitos dos 
-problemas associados ao uso de \textit{locks} e ainda assim conseguir um ganho em desempenho.
+\subsection{Mecanismos de Sincronização}
 
 
-Como exemplo, considere diversas tarefas que operam simultaneamente em uma mesma regiões 
-de memória, realizando escritas e leituras. Uma modificação no estado feita por uma tarefa 
-que e lida por outra pode denotar um estado inconsistente, se a modificação foi realizada 
-durante a operação da segunda tarefa.
+\subsubsection{Lock}
 
-Uma transação seria uma sequencia de operações de leitura e escrita em memória compartilhada 
-realizada por uma tarefa de forma otimista, isto e, assumindo que os estados intermediários 
-não foram alterados
- concorrentemente por outras tarefas.
+\textit{Lock} é uma solução de software para tentar impedir que duas
+tarefas acessem os mesmos dados compartilhados simultaneamente,
+implementado assim a exclusão mutua. Considere que haja uma variável
+compartilhada (\textit{lock}), inicialmente contendo o valor 0. Quando uma
+tarefa deseja utilizar um recurso compartilhado, ela primeiro testa 
+o valor da variável \textit{lock}. Se \textit{lock} for 0, a tarefa
+altera essa variável para 1 e utiliza o dado compartilhado. Se \textit{lock}
+já estiver com o valor 1, a tarefa simplesmente aguardará até que ela
+se torne 0. Assim, um 0 significa que nenhuma tarefa está utilizando o
+recurso e um 1 indica que existe uma tarefa que está utilizando o recurso.
 
 
-As operações realizadas nas transações entretanto são registradas, e logo antes do fim das 
-transações e verificado se o estado lido está consistente, baseado nos registros; supondo 
-que estejam, as modificações realizadas na transações o efetivadas, tornando-se permanentes. 
-Caso contrário, o registro permite que quaisquer mudanças sejam desfeitas, abortando a transação.
+\subsubsection{Lock reentrante}
 
+\textit{Lock} reentrante é um \textit{lock} que pode ser readquirido pela
+\textit{thread} que o possui sem causar \textit{deadlock} com ela mesma.
+
+\subsubsection{Spin}
+
+\textit{Spin locks} são um tipo especial de \textit{lock} projetados
+para trabalhar em um ambiente multiprocessador. Se uma tarefa encontra
+o \textit{spin lock} aberto, ele adquiri o \textit{lock} e acessa os
+dados compartilhados.  Caso contrário ela fica presa em um {\it loop}.
+A vantagem desse método é que a maioria dos recursos ficam trancadas por
+milissegundos apenas, seria mais custoso liberar a \textit{CPU} e tenta-la
+readquiri-la posteriormente.
+
+\subsubsection{Block}
+….
+
+
+\subsubsection{Semáforos}
+
+Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de
+sinais para despertar salvos para uso futuro.  De acordo com a proposta dele,
+foi introduzido um novo tipo de variável chamado semáforo. Um semáforo
+poderia conter o valor 0 – indicando que nenhum sinal de acordar foi
+salvo – ou algum valor positivo se um ou mais sinais de acordar estivessem
+pendentes.
+
+Dijkstra propôs a existência de duas operações: \texttt{down} e
+\texttt{up}. A operação \texttt{down} sobre um semáforo verifica se seu
+valor é maior que 0, caso seja, o decrementa em uma unidade e prossegue
+com a sua execução.  Se o valor do semáforo for 0, a tarefa será posta
+para dormir, sem terminar a operação\texttt{down}. Garante-se que, uma vez
+iniciada uma operação de semáforo, nenhuma outra tarefa pode ter acesso
+ao semáforo até que a operação tenha terminado ou sido bloqueada. Essa
+atomicidade é absolutamente essencial para resolver os problemas de
+sincronização e evitar condições de corrida.
+
+A operação \texttt{up} incrementa o valor de um dado semáforo. Se uma
+ou mais tarefas estivessem dormindo naquele semáforo, incapacitadas de
+terminar sua operação \texttt{down}, uma delas será escolhida pelo sistema
+(por exemplo, aleatoriamente) e será dada a permissão para terminar sua
+operação \texttt{down}. Portanto, depois de um \texttt{up} em um semáforo
+com tarefas dormindo nele, o semáforo permanecerá 0, mas haverá uma tarefa
+a menor dormindo nele.
+
+\subsubsection{Monitor}
+
+Para facilitar a escrita correta de programas, Hoare e Brinch Hansen propuseram
+uma unidade básica de sincronização de alto nível chamada monitor.
+Um monitor é uma coleção de procedimentos, variáveis e estruturas de dados,
+tudo isso agrupado em um tipo especial de módulo. As tarefas podem invocar
+os procedimentos de um monitor quando quiserem, mas não podem ter acesso
+direto às estruturas internas de dados ao monitor a partir de procedimentos
+declarados fora do monitor.
+
+Os monitores apresentam uma propriedade importante que os torna úteis
+para realizar a exclusão mútua: somente uma tarefa pode estar ativa em um
+monitor em um dado momento. O monitor é uma construção da linguagem de
+programação. Em geral, quando uma tarefa chama um procedimento do monitor,
+algumas das primeira instruções do procedimento verificarão se qualquer
+outra tarefa está atualmente ativa dentro do monitor. Se estiver, a tarefa
+que o invocou será suspensa até que a outra tarefa deixe o monitor. Se nenhuma
+outra tarefa estiver usando o monitor, a tarefa que o invocou poderá entrar.
+
+%\subsubsection{Inversão de Prioridade}
+%
+%Considere um computador com dois processos: H, com alta prioridade, e L, com baixa prioridade. 
+%As regras de escalonamento são tais que H é executado sempre que estiver no estado pronto. 
+%Em certo momento, com L em sua região crítica, H torna-se pronto para executar. Agora H inicia 
+%uma espera ociosa, mas, como L nunca é escalonado enquanto H está executando, L nunca tem a 
+%oportunidade de deixar sua região crítica e, assim, H fica em um laço infinito. Essa situação 
+%é referida como problema da inversão de prioridade.
+
+\subsubsection{Memória Transacional}
+
+
+Memória Transacional tem sido muito discutida atualmente, e o seu grande
+interesse é pelo fato desta eliminar os problemas comumente associados com
+locks, tais como: \cite{xxx} {\it convoying}, \cite{xxx} {\it deadlock} e
+\cite{xxx} {\it inversão de
+prioridade}. Um sistema de memória transacional utiliza \cite{xxx} transações como
+um mecanismo para abstrair a computação paralela. Uma transação é qualquer
+operação que garante as propriedades ACID:
+
+\begin{itemize}
+    \item Atomicidade
+    \item Consistência
+    \item Isolamento
+    \item Durabilidade
+\end{itemize}
+
+Sendo apenas as propriedades ACI utilizadas pela Memória transacional. Como
+um exemplo de sistema de memória transacional podemos citar  \cite{xxx},
+que estendeu a linguagem \textit{Java} para suportar transações e
+\cite{xxx}, que implementou uma API baseada na famosa biblioteca OpenMP.
 
 \section{Exceções}
 
 Uma exceção é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o 
 fluxo normal de execução da aplicação. Exceções ocorrem durante a execução de aplicativos, como 
-por exemplo divisões por zero, acesso a posições inválidas (em listas ou arrays).
+por exemplo divisões por zero, acesso a posições inválidas em listas ou
+\textit{arrays}.
 
-
-Erros são comuns em tempo de execução e as aplicações devem estar preparadas para tratá-los 
-sem abortar o programa e perder os dados dos usuários. Erros são comuns em tempo de execução, 
-as aplicações devem estar preparadas para tratá-los sem abortar o programa e perder os dados 
-dos usuários. O conceito de tratamento de exceções permite ao programador ``lidar'' com o 
-problema (tratando-o) e permitindo ao programa continuar sua execução.
+Erros são comuns em tempo de execução e as aplicações devem estar
+preparadas para tratá-los sem abortar o programa e perder os dados dos
+usuários. O conceito de tratamento de exceções permite ao programador
+``lidar'' com o problema (tratando-o) e permitindo ao programa continuar
+sua execução.
 
 As vantagens no uso de exceções são: 
 
@@ -189,3 +244,11 @@ As vantagens no uso de exceções são:
 \end{itemize}
 
 
+%\subsection{Seção Críticas}
+%
+%Durante uma parte do tempo, um processo está ocupado fazendo computações
+%internas e outras coisas que não acarretam em condições de disputa. Contudo,
+%algumas vezes, um processo precisa ter acesso à memória compartilhada ou a
+%recursos compartilhados ou tem que fazer outras coisas críticas que podem
+%ocasionar disputas. Aquela parte do programa em que há acesso à memória
+%compartilhada é chamado de seção crítica.
