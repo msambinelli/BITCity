@@ -38,14 +38,14 @@ de algum mecanismo de sincronização para manter a consistência desses
 dados. Atualmente o método de se fazer sincronização mais utilizada é
 a exclusão mútua \cite{ARTOFMPP, MCRT}. 
 
-Este Capítulo está organizado da seguinte maneira: Na Seção \ref{sub:prob}
+Este Capítulo está organizado da seguinte maneira: Na Seção \ref{sec:prob}
 será abordado alguns problema comuns na programação paralela. A Seção
-\ref{sub:mecanismo} abordará alguns mecanismos utilizados para se fazer
-a sincronização. Por último, a Seção \ref{sub:except} apresenta 
+\ref{sec:mecanismo} abordará alguns mecanismos utilizados para se fazer
+a sincronização. Por último, a Seção \ref{sec:except} apresenta 
 conceitos a cerca das exceções.
 
 \section{Problemas Comuns na Computação Paralela}
-\label{sub:prob}
+\label{sec:prob}
 
 \subsection{Condição de Corrida}
 
@@ -109,7 +109,7 @@ para gerar um \textit{deadlock}.
 %
 
 \section{Mecanismos de Sincronização}
-\label{sub:mecanismo}
+\label{sec:mecanismo}
 
 \subsection{Lock}
 
@@ -123,7 +123,6 @@ altera essa variável para 1 e utiliza o dado compartilhado. Se \textit{lock}
 já estiver com o valor 1, a tarefa simplesmente aguardará até que ela
 se torne 0. Assim, um 0 significa que nenhuma tarefa está utilizando o
 recurso e um 1 indica que existe uma tarefa que está utilizando o recurso.
-
 
 \subsection{Lock reentrante}
 
@@ -223,7 +222,7 @@ que estendeu a linguagem \textit{Java} para suportar transações e
 \cite{xxx}, que implementou uma API baseada na famosa biblioteca OpenMP.
 
 \section{Exceções}
-\label{sub:except}
+\label{sec:except}
 
 Uma exceção é um evento, normalmente associado a um erro, e que ao ser disparado interrompe o 
 fluxo normal de execução da aplicação. Exceções ocorrem durante a execução de aplicativos, como 
@@ -243,92 +242,6 @@ As vantagens no uso de exceções são:
 \item Agrupamento e diferenciação de erros (e seus respectivos tratamentos)
 \item Obrigatoriedade de tratamento (exceções não podem ser ignoradas)
 \end{itemize}
-
-
-
-\chapter{Concorrência em Java}
-\label{cha:concjava}
-
-\section{Interface Runnable e classe Thread}
-
-A linguagem de programação \texttt{Java} fornece diretamente suporte a
-aplicações \textit{multithread}, permitindo a criação de linhas de
-execução por meio de extensão da classe \verb!Thread! ou implementação
-da interface \verb!Runnable!.
-
-Não há diferenças, no que diz respeito a concorrência, entre um método
-e outro. Porém, como a linguagem disponibiliza suporte apenas a
-herança simples, extender a classe \verb!Thread! significa que não
-será possível herdar funcionalidades de qualquer outra classe. Para
-resolver esse problema, a aplicação pode criar uma hierarquia de
-classes ou, então, implementar a interface \verb!Runnable!.
-
-Indiferente do método utilizado, o corpo da classe deve conter a
-implementação de um método \verb!run!. Este será invocado ao iniciar a
-\textit{thread} por meio do método \verb!start!. O método \verb!run!
-serve um propósito similar ao da função \verb!main! na linguagem
-\texttt{C}, ou mesmo \texttt{Java}, ou seja, ao encerrar a execução do
-mesmo a linha de execução é considerada como encerrada e não pode mais
-ser reiniciada.
-
-\section{Synchronized}
-% XXX Acho que nem da pra corrigir sem reescrever.
-
-O modificador \textit{synchronized} tem seu uso e importância destacados quando
-várias \textit{threads} estão sendo executadas em um programa e estas
-necessitam atualizar dados compartilhados. Tais \textit{threads} podem
-tentar realizar
-essa operação ao mesmo tempo, o que poderia levar a um resultado
-inesperado. Para resolver este problema a \textit{Java} disponibiliza o
-modificador \textit{synchronized} para implementar a exclusão mutua.
-
-Ao marcar um método com \textit{synchronized}, JVM 
-garantirá que apenas uma \textit{thread} acesse tal método. Se outras % xxx acho que isso aqui ta errado
-\textit{threads} tentarem fazer o mesmo, elas serão colocadas em espera até que a
-\textit{thread} atual finalize seu trabalho e libere o método.
-
-\section{Exception}
-
-A linguagem de programação Java utiliza exceções para tratar erros e
-demais eventos excepcionais. Uma exceção é um evento que ocorre durante
-a execução de um programa que interrompe o fluxo normal das instruções
-\cite{except}.
-
-O primeiro passo na construção de um manipulador de exceção é colocar
-o código que pode lançar uma exceção dentro de um bloco \texttt{try}. Em geral,
-um bloco \texttt{try} é semelhante ao seguinte.
-
-\begin{lstlisting}
-
-try {
-    code
-}
-catch and finally blocks . . .
-    
-\end{lstlisting}
-
-
-Se ocorrer uma exceção no bloco \texttt{try}, a exceção é tratada por um
-manipulador de exceção a ele associado. Para associar um manipulador de
-exceção com um bloco \texttt{try}, você definir colocar um bloco
-\texttt{catch}.
-
-Você associa manipuladores de exceção, com um bloco \texttt{try}, fornecendo
-um ou mais blocos \texttt{catch} logo após o bloco \texttt{try}. Nenhum
-código pode ser entre o final do bloco \texttt{try} e no início do primeiro bloco % WTF?!
-\texttt{catch}.
-
-\begin{lstlisting}
-
-try {
-     
-} catch (ExceptionType name) {
-     
-} catch (ExceptionType name) {
-     
-}  
-
-\end{lstlisting}
 
 
 %\subsection{Seções Críticas}
