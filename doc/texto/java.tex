@@ -24,20 +24,48 @@ mesmo a linha de execução é considerada como encerrada e não pode mais
 ser reiniciada.
 
 \section{Synchronized}
-% XXX Acho que nem da pra corrigir sem reescrever.
 
-O modificador \textit{synchronized} tem seu uso e importância destacados quando
-várias \textit{threads} estão sendo executadas em um programa e estas
-necessitam atualizar dados compartilhados. Tais \textit{threads} podem
-tentar realizar
-essa operação ao mesmo tempo, o que poderia levar a um resultado
-inesperado. Para resolver este problema a \textit{Java} disponibiliza o
-modificador \textit{synchronized} para implementar a exclusão mutua.
+Em JAVA a exclusão mutua é implementada utilizando-se o modificador
+\texttt{synchronized}. \texttt{synchronized} faz com que os métodos sejam
+executados inteiramente um atrás do outro sobre o mesmo objeto, ou seja,
+quando um método iniciar a sua operação sobre um objeto ele irá terminar
+antes que qualquer outro método inicie suas operações sobre o mesmo objeto.
 
-Ao marcar um método com \textit{synchronized}, JVM 
-garantirá que apenas uma \textit{thread} acesse tal método. Se outras % xxx acho que isso aqui ta errado
-\textit{threads} tentarem fazer o mesmo, elas serão colocadas em espera até que a
-\textit{thread} atual finalize seu trabalho e libere o método.
+Um objeto que possui métodos sincronizados deve possuir uma fila para
+guardar os métodos que tentaram acessar o objeto enquanto este estava sendo
+utilizado por um outro método sincronizado. Assim quando o método que
+atualmente está utilizando o objeto terminar as suas operações sobre esse
+, deve-se permitir que um próximo método da fila de espera realize suas
+operações sobre o objeto. 
+
+Abaixo é mostrado um pequeno exemplo retirado de \cite{sebesta}. O exemplo
+mostra dois métodos modificados com \texttt{synchronized} e desta forma
+impedindo que um interfira na computação do outro.
+
+\begin{lstlisting}
+class GerenciaREtentor {
+    private int[100] retentor;
+    ...
+    public synchronized void deposita(int item) { ... }
+    public synchronized int busca() { ... }
+    ...
+}
+\end{lstlisting}
+
+O modificador \texttt{synchronized} também permite sincronizar apenas um
+segmento de código, isso é útil quando o trecho de código que trabalha com
+dados compartilhados é muito pequeno em relação ao tamanho do método. Isso
+pode ser feito com a denominada instrução sincronizada:
+
+\begin{lstlisting}
+synchronized(expressão){
+    instrução
+}
+\end{lstlisting}
+
+Uma expressão que é avaliada para um objeto e quando
+satisfeita o objeto é bloqueado durante a execução do corpo de
+\texttt{synchronized}.
 
 \section{Exception}
 
