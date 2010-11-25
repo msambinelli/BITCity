@@ -1,9 +1,9 @@
 \chapter{Concorrência e Exceções}
 
-Em alguns sistemas computacionais, processos que trabalham juntos podem compartilhar algum 
-serviço em comum. Com efeito, a gestão da concorrência entre processos é a fonte de inúmeras 
-dificuldades no desenvolvimento de software; o acesso descoordenado a um recurso (a chamada 
-condição de corrida) induz no sistema um comportamento imprevisível.
+Em sistemas computacionais, processos que trabalham juntos podem compartilhar 
+recursos em comum. A gestão da concorrência entre processos é a fonte de inúmeras 
+dificuldades no desenvolvimento de software. O acesso descoordenado a um recurso 
+(condição de corrida) induz no sistema um comportamento imprevisível.
 
 Para evitar esse problema de recursos compartilhados devemos encontrar algum modo de impedir 
 que mais de um processo utilize ao mesmo tempo estes recursos. Em outras palavras, precisamos 
@@ -19,19 +19,19 @@ Quando um programa não é executado de forma esperada é necessário informar o
 
 \subsection{Condição de Disputa}
 
-Quando dois processos trabalham juntos, eles podem compartilhar algum recurso em comum. Uma condição de disputa ocorre quando dois ou mais processos necessitam efetuar operações em uma mesma área de memória, mas os resultados destas operações dependem da ordem em que essas operações são executadas.
+Quando dois processos trabalham juntos, eles podem compartilhar algum recurso em comum. Uma condição de disputa ocorre quando dois ou mais processos necessitam efetuar operações em uma mesma área de memória, mas os resultados destas operações dependem da ordem em que essas operações são executadas \cite{tanen}.
 
 \subsection{Seção Críticas}
 
 Durante uma parte do tempo, um processo está ocupado fazendo computações internas e outras coisas que não acarretam
 em condições de disputa. Contudo, algumas vezes, um processo precisa ter acesso à memória compartilhada ou a recursos compartilhados ou tem que fazer outras coisas críticas que podem ocasionar disputas. Aquela parte do programa
-em que há acesso à memória compartilhada é chamado de seção crítica.
+em que há acesso à memória compartilhada é chamado de seção crítica \cite{tanen}.
 
 
 \subsection{Lock}
 
 Lock é uma solução de software para tentar impedir que dois processos acessem um recurso 
-simultaneamente. Considere que haja uma única variável compartilhada (\textit{lock}), inicialmente 
+simultaneamente\cite{MCRT}. Considere que haja uma única variável compartilhada (\textit{lock}), inicialmente 
 contendo o valor 0. Para entrar em sua região crítica, um processo testa antes se há 
 impedimento, verificando o valor da variável \textit{lock}. Se \textit{lock} for 0, o processo altera essa 
 variável para 1 e entra na região crítica. Se \textit{lock} já estiver com o valor 1, o processo 
@@ -57,11 +57,11 @@ CPU e readquiri-la mais tarde.
 
 \subsection{Semáforos}
 
-Em 1965 Dijkstra sugeriu usar uma variável inteira para contar o número de vezes que o 
+Em Dijkstra sugeriu usar uma variável inteira para contar o número de vezes que o 
 processo foi acordado. De acordo com a proposta dele, foi introduzido um novo tipo de 
 variável chamado semáforo. Um semáforo poderia conter o valor 0 – indicando que nenhum 
 sinal de acordar foi salvo – ou algum valor positivo se um ou mais sinais de acordar 
-estivessem pendentes.
+estivessem pendentes \cite{TANE}.
 
 Dijkstra propôs a existência de duas operações,  \textit{douw} e \textit{up}. A operação \textit{down} sobre um 
 semáforo verifica se seu valor é maior que 0. Se for, o decrescerá de um e prosseguirá. 
@@ -97,7 +97,7 @@ monitor. Se nenhum outro processo estiver usando o monitor, o processo que chamo
 Um conjunto de processos estará em situação de \textit{deadlock} se todo processo pertencente ao conjunto 
 estiver esperando por um evento que somente um outro processo desse mesmo conjunto poderá fazer 
 acontecer. Como todos os processo estarão esperando, nenhum deles desencadeará qualquer um dos 
-eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre.
+eventos que o outro esta esperando e, assim, todos os processos continuam a esperar para sempre \cite{tanen}.
 
 Para que ocorra um \textit{Deadlock}, deve ter quatro condições satisfeitas:
 
