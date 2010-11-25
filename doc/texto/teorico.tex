@@ -95,6 +95,14 @@ detectá-los e agir.
 para gerar um \textit{deadlock}.
 \end{itemize}
 
+\subsubsection{Inversão de Prioridade}
+
+Inversão de prioridade descreve um caso geral onde uma tarefa de baixa
+prioridade guarda um recurso compartilhada para uso exclusivo que é
+requerido por uma tarefa de alta prioridade \cite{intel}. A tarefa de alta
+prioridade é então forçada a ficar bloqueada enquanto a tarefa de baixa
+prioridade não liberar o recurso.
+
 %\subsubsection{Livelock}
 %
 % WTF?
@@ -189,13 +197,6 @@ outra tarefa está atualmente ativa dentro do monitor. Se estiver, a tarefa
 que o invocou será suspensa até que a outra tarefa deixe o monitor. Se nenhuma
 outra tarefa estiver usando o monitor, a tarefa que o invocou poderá entrar.
 
-\subsubsection{Inversão de Prioridade}
-
-Inversão de prioridade descreve um caso geral onde uma tarefa de baixa
-prioridade guarda um recurso compartilhada para uso exclusivo que é
-requerido por uma tarefa de alta prioridade \cite{intel}. A tarefa de alta
-prioridade é então forçada a ficar bloqueada enquanto a tarefa de baixa
-prioridade não liberar o recurso.
 
 \subsection{Memória Transacional}
 
