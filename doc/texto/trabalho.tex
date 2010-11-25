@@ -89,7 +89,7 @@ fica responsável por detectar o problema e levantar uma exceção. A
 classe \verb!Application! fica responsável por tratar esta exceção,
 sendo exibido o erro encontrado e abortando a execução da aplicação.
 Recebendo um modelo correto, a aplicação trata de renderizar o mundo
-especificado. A classe \verb!WorldMap! que extende a classe
+especificado. A classe \verb!WorldMap! que estende a classe
 \verb!JPanel! e implementa a interface \verb!Runnable! fica
 responsável por essa tarefa. Na implementação atual, essa renderização
 é bastante simplificada, sendo feito uso de recursos simples como
@@ -99,10 +99,10 @@ o resultado desta etapa para o Modelo \ref{short-one} em momentos
 distintos durante a execução.
 \begin{figure}[ht!]
   \centering
-  \subfigure[Árvores crescendo, deslocamento de carros e outros detalhes \label{fig1}]{
+  \subfigure[Árvores crescendo, deslocamento de carros, outros detalhes \label{fig1}]{
     \includegraphics[scale=0.58]{figs/map1_1.png}
   }
-  \subfigure[Chovendo no mundo \label{fig2}]{
+  \subfigure[Chovendo no mundo, carro com retângulo branco buzinando \label{fig2}]{
     \includegraphics[scale=0.58]{figs/map1_2.png}
   }
   \caption{Modelo \ref{short-one} renderizado}
@@ -128,6 +128,20 @@ inserir uma ambulância ou não, iniciar chuva e também brotar folhas em
 Além da \textit{thread} principal e da \textit{thread} para desenho,
 cada instância de classes que tem como pai a \verb!WorldObject! também
 é uma \textit{thread}. Isso inclui todos os veículos que vão sendo
-criados, todas as árvores, os sinais de transito e chuva.
+criados, todas as árvores, os sinais de trânsito e chuva.
+
+A sincronização entre semáforos de um mesmo grupo deve ser realizada
+para garantir que apenas um deles permaneça aberto durante um período
+de tempo, eliminando a ocorrência de acidentes neste mundo ideal. Para
+cada letra encontrada no modelo, uma instância da classe
+\verb!TrafficLight! é criada e cada um destes recebe uma instância da
+classe \verb!Semaphore! que controla os estados de um sinal de
+trânsito. Isso é realizado de forma que um mesmo conjunto de letras
+receba a mesma instância de um \verb!Semaphore! e, juntamente com a
+\textit{keyword} \verb!synchronized! da linguagem Java, assim,
+consegue-se limitar o acesso ao método \verb!Semaphore.open! a uma
+única instância de um dado conjunto de \verb!TrafficLight!.
+
+XXX Sincronização de chuva.. XXX
 
 ,,,
