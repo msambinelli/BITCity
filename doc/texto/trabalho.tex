@@ -81,4 +81,43 @@ fica responsável por detectar o problema e levantar uma exceção. A
 classe \verb!Application! fica responsável por tratar esta exceção,
 sendo exibido o erro encontrado e abortando a execução da aplicação.
 Recebendo um modelo correto, a aplicação trata de renderizar o mundo
-especificado. ...
+especificado. A classe \verb!WorldMap! que extende a classe
+\verb!JPanel! e implementa a interface \verb!Runnable! fica
+responsável por essa tarefa. Na implementação atual, essa renderização
+é bastante simplificada, sendo feito uso de recursos simples como
+retângulos e círculos que são desenhados através de métodos existentes
+da classe \verb!Graphics2D!. As Figuras \ref{fig1} e \ref{fig2} exibem
+o resultado desta etapa para o Modelo \ref{short-one}.
+
+\begin{figure}[ht!]
+  \centering
+  \subfigure[Árvores crescendo, deslocamento de carros e outros detalhes \label{fig1}]{
+    \includegraphics[scale=0.60]{figs/map1_1.png}
+%  \caption{Modelo \ref{short-one} renderizado \label{fig1}}
+  }
+%\end{figure}
+%\begin{figure}[ht!]
+%  \centering
+  \subfigure[Chovendo no mundo \label{fig2}]{
+    \includegraphics[scale=0.60]{figs/map1_2.png}
+  %\caption{Chovendo no mundo \label{fig2}}
+  }
+  \caption{Modelo \ref{short-one} renderizado}
+\end{figure}
+
+
+A renderização do mundo ocorre em um \textit{thread} a parte, sendo
+esta criada durante a inicialização da aplicação. É permitido ajustar
+a velocidade da taxa de atualização, ou \textit{Frames Per Second} (FPS),
+durante a execução, podendo variar entre 30 e 45 renderizações por
+segundo do mundo por completo. Durante estas atualizações também
+decide-se entre criar um novo carro (classe \verb!Car!) ou não,
+inserir uma ambulância ou não, iniciar chuva e também brotar folhas em
+árvores.
+
+Além da \textit{thread} principal e da \textit{thread} para desenho,
+cada instância de classes que tem como pai a \verb!WorldObject! também
+é uma \textit{thread}. Isso inclui todos os veículos que vão sendo
+criados, todas as árvores, os sinais de transito e chuva.
+
+,,,
