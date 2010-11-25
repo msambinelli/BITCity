@@ -1,4 +1,32 @@
 \chapter{Conclusão}
 \label{chap:conclusao}
 
-1 página (+/- o limite)
+Com os atuais processadores, que possuem diversos núcleos, com a própria
+modelagem de alguns problema e com a profecia de que a computação paralela
+será a próxima etapa na evolução dos computadores \cite{TM}, é uma grande
+desvantagem de uma linguagem que se diga moderna não possuir nenhum
+mecanismo para abstrair a computação paralela, mesmo ao custo do projeto da
+linguagem se tornar mais complexo. A aplicação do Capitulo
+\ref{cha:bitcity} se implementada sequencialmente, seria muito mais
+complexa, e poderia ter um desempenho muito pobre devido ao grande esforço
+computacional exigido para atualizar a tela da aplicação.
+
+No que se diz respeito à exceções, a desvantagem de ter suporte a
+exceções na linguagem, também é o fato do projeto da linguagem e o seu projeto
+ficarem mais complexos e da necessidade de se implementar um manipulador
+de exceções. Por outro lado, suporte a exceções pela linguagem torna
+mais fácil a manipulação de erros, pois evita a necessidade do uso de
+uma variável \texttt{status} e de um uso de um condicional sempre que se
+deseja verificar a ocorrência de um evento.
+
+Uma ilustração de como o suporte de linguagem à exceções pode simplificar
+o código pode ser visto em como um código C faria o tratamento da entrada de
+arquivos. Digamos que um programa C precise abrir 10 arquivos diferentes, pelo
+fato de C não suportar exceções é necessário checar uma variável de {\it
+status}, o retorno da função, para saber se a operação foi realizada com
+sucesso, o que obrigaria o desenvolvedor a colocar 10 testes condicionais para
+checar se cada uma das operações de abrir arquivo foi realizada com
+sucesso. Se a linguagem de programação C suporta-se exceções como a
+linguagem JAVA por exemplo, bastaria apenas colocar essas 10 operações
+dentro de uma cláusula \texttt{try} e declarar uma cláusula \texttt{catch}
+para manipular exceções as exceções geradas.
