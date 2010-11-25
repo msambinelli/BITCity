@@ -142,6 +142,21 @@ receba a mesma instância de um \verb!Semaphore! e, juntamente com a
 consegue-se limitar o acesso ao método \verb!Semaphore.open! a uma
 única instância de um dado conjunto de \verb!TrafficLight!.
 
-XXX Sincronização de chuva.. XXX
+Também é feito uso do recurso de sincronização fornecido pela
+\verb!synchronized! para avisar (ou alertar) a instância da classe
+\verb!Rain! quando deve-se iniciar a chuva. Esse controle é feito da
+seguinte forma: ao iniciar a \textit{thread} de \verb!Rain!, ela
+invoca o método \verb!Thread.wait! com sincronização no objeto da
+instância e, durante a execução da aplicação, a \textit{thread} de
+\verb!WorldMap! sincroniza com o mesmo objeto mas faz uso do método
+\verb!Thread.notify! para comunicar a \textit{thread} de \verb!Rain!
+que esta deve começar a fazer chover. A determinação de quando o
+método \verb!Thread.notify! é de fato chamado depende do sorteio de
+números aleatórios e também da satisfação da condição de já não estar
+chovendo.
 
-,,,
+Um último recurso de destaque no mundo é a ambulância, criada por meio
+da classe \verb!Ambulance!. É permitido que somente uma desta esteja
+no mundo ao mesmo tempo e ela só é criada caso o total de carros em
+circulação seja superior a quantidade $max - 4$. XXX Falar de custo de
+criar thread, ocupação de memória, limites... XXX
