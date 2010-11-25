@@ -1,8 +1,27 @@
 \chapter{Introdução}
 
-Os computadores modernos são capazes de fazer várias coisas ao mesmo tempo, Enquanto executa um
-programa do usuário, ele também pode ler os dados de um arquivo do disco, salvar dados em um arquivo
-e mandar imprimir um documento em uma impressora. A CPU também salta de programa para programa, executando
-cada um deles centenas de vezes em milissegundos. Como esse tempo é muito pequeno, o usuário tem a impressão 
-de que os programas estão sendo executados em paralelo. Contudo, temos que garantir que dois ou mais processos não
-invadam uns aos outros quando envolvidos em atividades críticas.
+Alguns problemas possuem uma solução concorrente mais natural do que a
+sequencial, é o caso de muitos problemas de simulação, onde diversas
+variáveis do problema são modificadas independentemente e de forma
+concorrente. É o caso da simulação de uma cidade, um caro $i$ não se move
+para depois um carro $j$ se mover, eles se movem de forma independente um
+do outro.
+
+Além de ser a solução mais natural para alguns tipos de problema, muitos
+computadores atualmente possuem múltiplos processadores, e dessa forma, 
+uma aplicação pode aumentar sua performasse usando a concorrência em tais
+arquiteturas.
+
+% xxx falar sobre excessoes
+
+
+Este trabalho está dividido da seguinte forma. No Capítulo
+\ref{cha:concexec} é feita uma pequena introdução a concorrência, seus
+principais problema e seus mecanismos de sincronização, e exceções. O
+Capítulo \ref{cha:concjava} aborda os principais mecanismos oferecidos pela
+linguagem JAVA para se implementar a concorrência e manipular exceções. O
+Capítulo \ref{cha:bitcity} apresenta um simulador de uma cidade que faz uma
+amplo uso dos mecanismo de concorrência, sincronização e tratamento de
+exceções em JAVA. No Capitulo \ref{cha:conclusao} é apresentada as
+vantagens e desvantagens do suporte pela linguagem a concorrência e
+exceções. 
