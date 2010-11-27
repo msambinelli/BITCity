@@ -3,29 +3,29 @@
 Alguns problemas possuem uma solução concorrente mais natural do que a
 sequencial, é o caso de muitos problemas de simulação, onde diversas
 variáveis do problema são modificadas independentemente e de forma
-concorrente. É o caso da simulação de uma cidade, um caro $i$ não se move
+concorrente. É o caso da simulação de uma cidade, um carro $i$ não se move
 para depois um carro $j$ se mover, eles se movem de forma independente um
 do outro.
 
 Além de ser a solução mais natural para alguns tipos de problema, muitos
-computadores atualmente possuem múltiplos processadores, e dessa forma, 
-uma aplicação pode aumentar sua performasse usando a concorrência em tais
+computadores atualmente possuem múltiplos processadores e, dessa forma, 
+uma aplicação pode aumentar sua performance usando a concorrência em tais
 arquiteturas.
 
 Outro recurso importante que muitas linguagens modernas implementam é o
-tratamento e exceções. Uma exceção é qualquer evento errôneo ou não
+tratamento de exceções. Uma exceção é qualquer evento errôneo, ou não,
 que seja detectável por \textit{hardware} ou \textit{software} e que possa
 exigir processamento especial \cite{sebesta}. O suporte de exceções pela
-linguagem aumenta muito a confiabilidade do programa e força o programador
-a desenvolver pensando nos casos estremos.
+linguagem aumenta a confiabilidade do programa e força o programador
+a desenvolver pensando nos casos extremos.
 
-Este trabalho está dividido da seguinte forma. No Capítulo
+Este trabalho está dividido da forma seguinte. No Capítulo
 \ref{cha:concexec} é feita uma pequena introdução a concorrência, seus
-principais problema e seus mecanismos de sincronização, e exceções. O
+principais problemas, seus mecanismos de sincronização e exceções. O
 Capítulo \ref{cha:concjava} aborda os principais mecanismos oferecidos pela
-linguagem JAVA para se implementar a concorrência e manipular exceções. O
-Capítulo \ref{cha:bitcity} apresenta um simulador de uma cidade que faz uma
-amplo uso dos mecanismo de concorrência, sincronização e tratamento de
-exceções em JAVA. No Capitulo \ref{cha:conclusao} é apresentada as
+linguagem Java para implementar a concorrência e manipular exceções. O
+Capítulo \ref{cha:bitcity} apresenta um simulador de uma cidade que faz
+uso dos mecanismo de concorrência, sincronização e tratamento de
+exceções em Java. No Capítulo \ref{cha:conclusao} é apresentada as
 vantagens e desvantagens do suporte pela linguagem a concorrência e
 exceções. 
